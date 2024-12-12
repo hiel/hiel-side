@@ -1,0 +1,76 @@
+### 로그아웃 (테스트)
+GET {{host}}
+Content-Type: application/json; charset=utf-8
+
+> {%
+    client.global.clear("access-token");
+    client.global.clear("refresh-token");
+%}
+
+
+### 회원가입
+POST {{host}}/auths/signup
+Content-Type: application/json; charset=utf-8
+
+{
+    "email": "yangjunghooon@gmail.com",
+    "password": "yangjunghooon",
+    "name": "yangjunghooon",
+    "userType": "MASTER"
+}
+
+
+### 회원가입 인증
+PUT {{host}}/auths/signup/certificate
+Content-Type: application/json; charset=utf-8
+
+{
+    "signupToken": "c9333ae6-c916-42ac-ac9a-89ac03eb3096"
+}
+
+
+### 로그인
+POST {{host}}/auths/login
+Content-Type: application/json; charset=utf-8
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+> {%
+    client.global.set("access-token", response.body.data.accessToken);
+    client.global.set("refresh-token", response.body.data.refreshToken);
+%}
+
+
+### 토큰 갱신
+POST {{host}}/auths/refresh
+Content-Type: application/json; charset=utf-8
+
+{
+    "refreshToken": "{{refresh-token}}"
+}
+
+> {%
+    client.global.set("access-token", response.body.data.accessToken);
+    client.global.set("refresh-token", response.body.data.refreshToken);
+%}
+
+
+### 비밀번호 초기화 요청
+POST {{host}}/auths/password/reset/request
+Content-Type: application/json; charset=utf-8
+
+{
+    "email": "yangjunghooon@gmail.com"
+}
+
+
+### 비밀번호 초기화
+PUT {{host}}/auths/password/reset
+Content-Type: application/json; charset=utf-8
+
+{
+    "resetPasswordToken": "c9333ae6-c916-42ac-ac9a-89ac03eb3096"
+}

@@ -1,0 +1,35 @@
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+  <springProperty name="LOG_LEVEL" source="logging.level.root" />
+  <springProperty name="AWS_ACCESS_KEY" source="cloud.aws.credentials.access-key" />
+  <springProperty name="AWS_SECRET_KEY" source="cloud.aws.credentials.secret-key" />
+  <springProperty name="AWS_CLOUDWATCH_GROUP_NAME" source="cloud.aws.cloudwatch.group-name" />
+  <springProperty name="AWS_CLOUDWATCH_STREAM_PREFIX" source="cloud.aws.cloudwatch.stream-prefix" />
+
+  <appender name="AWS_CLOUDWATCH_APPENDER" class="ca.pjer.logback.AwsLogsAppender">
+    <logRegion>ap-northeast-2</logRegion>
+    <logGroupName>${AWS_CLOUDWATCH_GROUP_NAME}</logGroupName>
+    <logStreamUuidPrefix>${AWS_CLOUDWATCH_STREAM_PREFIX}</logStreamUuidPrefix>
+    <maxFlushTimeMillis>3000</maxFlushTimeMillis>
+    <accessKeyId>${AWS_ACCESS_KEY}</accessKeyId>
+    <secretAccessKey>${AWS_SECRET_KEY}</secretAccessKey>
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>[%date{ISO8601, Asia/Seoul}] [%5level] [%thread] [%file:%method:%line] %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <springProfile name="production | develop">
+    <root level="${LOG_LEVEL}">
+      <appender-ref ref="CONSOLE" />
+      <appender-ref ref="AWS_CLOUDWATCH_APPENDER" />
+    </root>
+  </springProfile>
+  <springProfile name="local">
+    <root level="${LOG_LEVEL}">
+      <appender-ref ref="CONSOLE" />
+    </root>
+  </springProfile>
+</configuration>

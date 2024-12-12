@@ -1,0 +1,9 @@
+### 비밀번호 변경
+PUT {{host}}/users/password
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{access-token}}
+
+{
+    "currentPassword": "yangjunghooon",
+    "updatePassword": "yangjunghooon"
+}

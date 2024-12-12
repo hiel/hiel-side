@@ -1,0 +1,43 @@
+name: cicd api develop
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+    paths:
+      - "**"
+      - "src/main/resources/db/migration/**"
+      - "**/http/**"
+      - "!.gitignore"
+      - "!.editorconfig"
+      - "!README.md"
+      - "!.run/**"
+      - "scripts/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.7
+      - uses: actions/setup-java@v4.2.2
+        with:
+          distribution: corretto
+          java-version: 21
+          architecture: x64
+      - uses: gradle/actions/setup-gradle@v4.0.0
+      - run: ./gradlew clean build -x test
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_API_DEVELOP }}
+      - run: ssh-keyscan ${{ secrets.SERVER_IP_API_DEVELOP }} >> ~/.ssh/known_hosts
+      - run: rsync -avz -e "ssh" build/libs/*.jar ${{ secrets.SSH_USER_API_DEVELOP }}@${{ secrets.SERVER_IP_API_DEVELOP }}:~/app/hiel-side
+      - uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP_API_DEVELOP }}
+          username: ${{ secrets.SSH_USER_API_DEVELOP }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_API_DEVELOP }}
+          port: ${{ secrets.SERVER_API_PORT }}
+          script: |
+            pm2 kill
+            pm2 start "java -jar -Dspring.profiles.active=develop ~/app/hiel-side/hiel-side-0.0.1-SNAPSHOT.jar"
