@@ -1,7 +1,10 @@
 package com.hiel.hielside.accountbook.apis.developers
 
+import com.hiel.hielside.accountbook.domains.IncomeExpenseType
 import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryEntity
 import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryRepository
+import com.hiel.hielside.accountbook.jpa.transaction.TransactionEntity
+import com.hiel.hielside.accountbook.jpa.transaction.TransactionRepository
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryEntity
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryRepository
 import com.hiel.hielside.common.domains.ServiceType
@@ -9,6 +12,7 @@ import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.domains.user.UserType
 import com.hiel.hielside.common.jpa.user.UserEntity
 import com.hiel.hielside.common.jpa.user.UserRepository
+import com.hiel.hielside.common.utilities.toOffsetDateTime
 import jakarta.transaction.Transactional
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,12 +26,18 @@ class DeveloperRestApiController(
     private val budgetCategoryRepository: BudgetCategoryRepository,
     private val transactionCategoryRepository: TransactionCategoryRepository,
     private val passwordEncoder: BCryptPasswordEncoder,
+    private val transactionRepository: TransactionRepository,
 ) {
     @Transactional
     @PostMapping("/migrate")
     fun migrate() {
-        userRepository.saveAll(
-            (1..5).map {
+        val userCount = 5
+        val budgetCategoryNames = listOf("국민은행", "현대카드", "비상금")
+        val transactionCategoryNames = listOf("식비", "커피", "모임")
+        val transactionCount = 30
+
+        val userEntities = userRepository.saveAll(
+            (1..userCount).map {
                 UserEntity(
                     serviceType = ServiceType.ACCOUNT_BOOK,
                     email = "yangjunghooon$it@gmail.com",
@@ -39,22 +49,37 @@ class DeveloperRestApiController(
             }
         )
 
-        budgetCategoryRepository.saveAll(
-            listOf("국민은행", "현대카드", "비상금").map {
+        val budgetCategoryEntities = budgetCategoryRepository.saveAll(
+            budgetCategoryNames.map {
                 BudgetCategoryEntity(
                     name = it,
-                    user = userRepository.findById(1).orElseThrow(),
+                    user = userEntities.first(),
                 )
             }
         )
 
-        transactionCategoryRepository.saveAll(
-            listOf("식비", "커피", "모임").map {
+        val transactionCategoryEntities = transactionCategoryRepository.saveAll(
+            transactionCategoryNames.map {
                 TransactionCategoryEntity(
                     name = it,
-                    user = userRepository.findById(1).orElseThrow(),
+                    user = userEntities.first(),
                 )
             }
         )
+
+        (1..transactionCount).forEach {
+            transactionRepository.save(
+                TransactionEntity(
+                    incomeExpenseType = (IncomeExpenseType.entries + List(9) { IncomeExpenseType.EXPENSE }).random(),
+                    title = "transaction$it",
+                    price = listOf(10000, 12000, 1000, 500, 3000).random().toLong(),
+                    isWaste = listOf(true, false).random(),
+                    user = userEntities.first(),
+                    budgetCategory = budgetCategoryEntities.random(),
+                    transactionCategory = transactionCategoryEntities.random(),
+                    transactionDatetime = "20240101".toOffsetDateTime("yyyyMMdd"),
+                )
+            )
+        }
     }
 }

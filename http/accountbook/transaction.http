@@ -12,3 +12,9 @@ Authorization: Bearer {{access-token}}
     "transactionCategoryId": 1,
     "transactionDate": "20240101"
 }
+
+
+### 내역 목록 조회
+GET {{host}}/account-book/transactions?transactionYearMonth=202401&page=1&pageSize=30
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{access-token}}

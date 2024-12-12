@@ -1,12 +1,16 @@
 package com.hiel.hielside.accountbook.apis.transaction
 
 import com.hiel.hielside.common.domains.ApiResponse
+import com.hiel.hielside.common.domains.ApiSliceResponse
 import com.hiel.hielside.common.domains.auth.UserDetailsImpl
 import com.hiel.hielside.common.utilities.ApiResponseFactory
+import com.hiel.hielside.common.utilities.toOffsetDateTime
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/account-book/transactions")
@@ -24,5 +28,22 @@ class TransactionRestApiController(
             userId = userDetails.id,
         )
         return ApiResponseFactory.success()
+    }
+
+    @GetMapping("")
+    fun getAll(
+        @AuthenticationPrincipal userDetails: UserDetailsImpl,
+        @RequestParam("page") page: Int,
+        @RequestParam("pageSize") pageSize: Int,
+        @RequestParam("transactionYearMonth") transactionYearMonth: String,
+    ): ApiSliceResponse<GetAllTransactionResponse> {
+        return ApiResponseFactory.sliceOf(
+            list = transactionService.getAll(
+                transactionYearMonth = "${transactionYearMonth}01".toOffsetDateTime("yyyyMMdd"),
+                page = page,
+                pageSize = pageSize,
+                userId = userDetails.id,
+            ).map { GetAllTransactionResponse.build(it) },
+        )
     }
 }

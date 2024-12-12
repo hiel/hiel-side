@@ -14,6 +14,7 @@ const val SECOND_PER_MINUTE = 60
 const val FIRST_MONTH_OF_YEAR = 1
 const val LAST_MONTH_OF_YEAR = 12
 const val LAST_WEEK_OF_YEAR = 52
+const val FIRST_DAY_OF_MONTH = 1
 
 fun OffsetDateTime.toFormatString(format: String = "yyyy-MM-dd HH:mm:ss"): String {
     return this.format(DateTimeFormatter.ofPattern(format))
@@ -24,6 +25,10 @@ fun String.toOffsetDateTime(format: String): OffsetDateTime {
 }
 
 fun OffsetDateTime.toDate(): Date = Date.from(this.toInstant())
+
+fun OffsetDateTime.convertToFirstDayOfMonth(): OffsetDateTime = this.withDayOfMonth(FIRST_DAY_OF_MONTH)
+
+fun OffsetDateTime.convertToLastDayOfMonth(): OffsetDateTime = this.withDayOfMonth(this.toLocalDate().lengthOfMonth())
 
 fun Int.hourToMinute() = (this * MINUTE_PER_HOUR).toLong()
 
