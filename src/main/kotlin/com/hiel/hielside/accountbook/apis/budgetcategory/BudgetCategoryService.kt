@@ -5,13 +5,13 @@ import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryRepository
 import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
-import com.hiel.hielside.common.jpa.user.UserRepository
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
 class BudgetCategoryService(
-    private val userRepository: UserRepository,
+    private val userRepository: AccountBookUserRepository,
     private val budgetCategoryRepository: BudgetCategoryRepository,
 ) {
     @Transactional

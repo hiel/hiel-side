@@ -4,7 +4,7 @@ import com.hiel.hielside.accountbook.domains.IncomeExpenseType
 import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryEntity
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionEntity
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryEntity
-import com.hiel.hielside.common.jpa.user.UserEntity
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import com.hiel.hielside.common.utilities.toFormatString
 import com.hiel.hielside.common.utilities.toOffsetDateTime
 
@@ -18,7 +18,7 @@ data class RegisterTransactionRequest(
     val transactionDate: String,
 ) {
     fun build(
-        user: UserEntity,
+        user: AccountBookUserEntity,
         budgetCategory: BudgetCategoryEntity,
         transactionCategory: TransactionCategoryEntity,
     ) = TransactionEntity(

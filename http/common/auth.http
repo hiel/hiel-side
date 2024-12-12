@@ -9,20 +9,19 @@ Content-Type: application/json; charset=utf-8
 
 
 ### 회원가입
-POST {{host}}/auths/signup
+POST {{host}}/account-book/auths/signup
 Content-Type: application/json; charset=utf-8
 
 {
     "email": "yangjunghooon@gmail.com",
     "password": "yangjunghooon",
     "name": "yangjunghooon",
-    "userType": "MASTER",
-    "serviceType": "ACCOUNT_BOOK"
+    "userType": "MASTER"
 }
 
 
 ### 회원가입 인증
-PUT {{host}}/auths/signup/certificate
+PUT {{host}}/account-book/auths/signup/certificate
 Content-Type: application/json; charset=utf-8
 
 {
@@ -31,13 +30,12 @@ Content-Type: application/json; charset=utf-8
 
 
 ### 로그인
-POST {{host}}/auths/login
+POST {{host}}/account-book/auths/login
 Content-Type: application/json; charset=utf-8
 
 {
     "email": "{{email}}",
-    "password": "{{password}}",
-    "serviceType": "ACCOUNT_BOOK"
+    "password": "{{password}}"
 }
 
 > {%
@@ -47,7 +45,7 @@ Content-Type: application/json; charset=utf-8
 
 
 ### 토큰 갱신
-POST {{host}}/auths/refresh
+POST {{host}}/account-book/auths/refresh
 Content-Type: application/json; charset=utf-8
 
 {
@@ -61,17 +59,16 @@ Content-Type: application/json; charset=utf-8
 
 
 ### 비밀번호 초기화 요청
-POST {{host}}/auths/password/reset/request
+POST {{host}}/account-book/auths/password/reset/request
 Content-Type: application/json; charset=utf-8
 
 {
-    "email": "yangjunghooon@gmail.com",
-    "serviceType": "ACCOUNT_BOOK"
+    "email": "yangjunghooon@gmail.com"
 }
 
 
 ### 비밀번호 초기화
-PUT {{host}}/auths/password/reset
+PUT {{host}}/account-book/auths/password/reset
 Content-Type: application/json; charset=utf-8
 
 {

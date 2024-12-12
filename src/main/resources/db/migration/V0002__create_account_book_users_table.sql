@@ -1,6 +1,5 @@
-CREATE TABLE hiel_side.users (
+CREATE TABLE account_book.users (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    service_type VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '서비스 유형',
     email VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '이메일',
     password VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '비밀번호',
     name VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '이름',
@@ -19,11 +18,10 @@ COMMENT='사용자'
 ;
 
 
-CREATE TABLE hiel_side.users_aud (
+CREATE TABLE account_book.users_aud (
     rev BIGINT UNSIGNED NOT NULL,
     revtype TINYINT NOT NULL,
     id BIGINT UNSIGNED NOT NULL,
-    service_type VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '서비스 유형',
     email VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '이메일',
     password VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '비밀번호',
     name VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '이름',

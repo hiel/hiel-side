@@ -7,7 +7,7 @@ import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategory
 import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
-import com.hiel.hielside.common.jpa.user.UserRepository
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.utilities.convertToFirstDayOfMonth
 import com.hiel.hielside.common.utilities.convertToLastDayOfMonth
 import com.hiel.hielside.common.utilities.pageOf
@@ -18,7 +18,7 @@ import java.time.OffsetDateTime
 
 @Service
 class TransactionService(
-    private val userRepository: UserRepository,
+    private val userRepository: AccountBookUserRepository,
     private val transactionRepository: TransactionRepository,
     private val budgetCategoryRepository: BudgetCategoryRepository,
     private val transactionCategoryRepository: TransactionCategoryRepository,

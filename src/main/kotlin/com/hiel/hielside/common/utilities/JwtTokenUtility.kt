@@ -6,7 +6,7 @@ import com.hiel.hielside.common.domains.auth.TokenType
 import com.hiel.hielside.common.domains.auth.UserDetailsImpl
 import com.hiel.hielside.common.domains.user.UserType
 import com.hiel.hielside.common.exceptions.ServiceException
-import com.hiel.hielside.common.jpa.user.UserEntity
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
@@ -27,7 +27,7 @@ class JwtTokenUtility(
 
     private val key = Keys.hmacShaKeyFor(secretKey.toByteArray())
 
-    fun generateAuthToken(user: UserEntity): AuthToken {
+    fun generateAuthToken(user: AccountBookUserEntity): AuthToken {
         val claims = mapOf(
             "id" to user.id,
             "email" to user.email,

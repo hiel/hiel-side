@@ -1,7 +1,7 @@
 package com.hiel.hielside.accountbook.jpa.transactioncategory
 
 import com.hiel.hielside.common.jpa.BaseEntity
-import com.hiel.hielside.common.jpa.user.UserEntity
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -25,5 +25,5 @@ class TransactionCategoryEntity(
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    val user: UserEntity,
+    val user: AccountBookUserEntity,
 ) : BaseEntity()

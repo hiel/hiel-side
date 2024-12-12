@@ -1,5 +1,5 @@
 ### 비밀번호 변경
-PUT {{host}}/users/password
+PUT {{host}}/account-book/users/password
 Content-Type: application/json; charset=utf-8
 Authorization: Bearer {{access-token}}
 

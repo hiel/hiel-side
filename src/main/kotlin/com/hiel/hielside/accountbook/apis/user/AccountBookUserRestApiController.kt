@@ -1,4 +1,4 @@
-package com.hiel.hielside.common.apis.user
+package com.hiel.hielside.accountbook.apis.user
 
 import com.hiel.hielside.common.domains.ApiResponse
 import com.hiel.hielside.common.domains.auth.UserDetailsImpl
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/users")
+@RequestMapping("/account-book/users")
 @RestController
-class UserRestApiController(
-    private val userService: UserService,
+class AccountBookUserRestApiController(
+    private val userService: AccountBookUserService,
 ) {
     @PutMapping("/password")
     fun updatePassword(

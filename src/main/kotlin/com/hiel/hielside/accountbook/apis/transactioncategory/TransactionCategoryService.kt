@@ -5,13 +5,13 @@ import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategory
 import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
-import com.hiel.hielside.common.jpa.user.UserRepository
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
 class TransactionCategoryService(
-    private val userRepository: UserRepository,
+    private val userRepository: AccountBookUserRepository,
     private val transactionCategoryRepository: TransactionCategoryRepository,
 ) {
     @Transactional

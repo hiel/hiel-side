@@ -1,6 +1,5 @@
-package com.hiel.hielside.common.jpa.user
+package com.hiel.hielside.accountbook.jpa.user
 
-import com.hiel.hielside.common.domains.ServiceType
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.domains.user.UserType
 import com.hiel.hielside.common.jpa.BaseEntity
@@ -16,15 +15,11 @@ import org.hibernate.envers.Audited
 
 @Audited
 @Entity
-@Table(name = "users", catalog = "hiel_side")
-class UserEntity(
+@Table(name = "users", catalog = "account_book")
+class AccountBookUserEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-
-    @Column(name = "service_type", updatable = false, nullable = false, length = 20)
-    @Enumerated(value = EnumType.STRING)
-    val serviceType: ServiceType,
 
     @Column(name = "email", updatable = false, nullable = false, length = 255)
     val email: String,

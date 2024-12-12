@@ -7,11 +7,10 @@ import com.hiel.hielside.accountbook.jpa.transaction.TransactionEntity
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionRepository
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryEntity
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryRepository
-import com.hiel.hielside.common.domains.ServiceType
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.domains.user.UserType
-import com.hiel.hielside.common.jpa.user.UserEntity
-import com.hiel.hielside.common.jpa.user.UserRepository
 import com.hiel.hielside.common.utilities.toOffsetDateTime
 import jakarta.transaction.Transactional
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/account-book/developers")
 @RestController
 class DeveloperRestApiController(
-    private val userRepository: UserRepository,
+    private val userRepository: AccountBookUserRepository,
     private val budgetCategoryRepository: BudgetCategoryRepository,
     private val transactionCategoryRepository: TransactionCategoryRepository,
     private val passwordEncoder: BCryptPasswordEncoder,
@@ -38,8 +37,7 @@ class DeveloperRestApiController(
 
         val userEntities = userRepository.saveAll(
             (1..userCount).map {
-                UserEntity(
-                    serviceType = ServiceType.ACCOUNT_BOOK,
+                AccountBookUserEntity(
                     email = "yangjunghooon$it@gmail.com",
                     encryptPassword = passwordEncoder.encode("yangjunghooon"),
                     name = "yangjunghooon$it",

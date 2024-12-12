@@ -1,4 +1,4 @@
-package com.hiel.hielside.common.apis.auth
+package com.hiel.hielside.accountbook.apis.auth
 
 import com.hiel.hielside.common.domains.ApiResponse
 import com.hiel.hielside.common.utilities.ApiResponseFactory
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/auths")
+@RequestMapping("/account-book/auths")
 @RestController
-class AuthRestApiController(
-    private val authService: AuthService,
+class AccountBookAuthRestApiController(
+    private val authService: AccountBookAuthService,
     private val passwordEncoder: PasswordEncoder,
 ) {
     @PostMapping("/signup")
     fun signup(
-        @RequestBody request: SignupRequest,
+        @RequestBody request: AccountBookSignupRequest,
     ): ApiResponse<Unit> {
         request.validate()
         authService.signup(
@@ -25,14 +25,13 @@ class AuthRestApiController(
             password = passwordEncoder.encode(request.password),
             name = request.name,
             userType = request.userType,
-            serviceType = request.serviceType,
         )
         return ApiResponseFactory.success()
     }
 
     @PutMapping("/signup/certificate")
     fun certificateSignup(
-        @RequestBody request: CertificateSignupRequest,
+        @RequestBody request: AccountBookCertificateSignupRequest,
     ): ApiResponse<Unit> {
         authService.certificateSignup(request.signupToken)
         return ApiResponseFactory.success()
@@ -40,39 +39,37 @@ class AuthRestApiController(
 
     @PostMapping("/login")
     fun login(
-        @RequestBody request: LoginRequest,
-    ): ApiResponse<IssueTokenResponse> {
+        @RequestBody request: AccountBookLoginRequest,
+    ): ApiResponse<AccountBookIssueTokenResponse> {
         return ApiResponseFactory.success(authService.login(
             email = request.email,
             password = request.password,
-            serviceType = request.serviceType,
         ))
     }
 
     @PostMapping("/refresh")
     fun refreshToken(
-        @RequestBody request: RefreshTokenRequest,
-    ): ApiResponse<IssueTokenResponse> {
+        @RequestBody request: AccountBookRefreshTokenRequest,
+    ): ApiResponse<AccountBookIssueTokenResponse> {
         return ApiResponseFactory.success(authService.refreshToken(request.refreshToken))
     }
 
     @PostMapping("/password/reset/request")
     fun requestPasswordReset(
-        @RequestBody request: RequestPasswordResetRequest,
+        @RequestBody request: AccountBookRequestPasswordResetRequest,
     ): ApiResponse<Unit> {
         authService.requestPasswordReset(
             email = request.email,
-            serviceType = request.serviceType,
         )
         return ApiResponseFactory.success()
     }
 
     @PutMapping("/password/reset")
     fun resetPassword(
-        @RequestBody request: ResetPasswordRequest,
-    ): ApiResponse<ResetPasswordResponse> {
+        @RequestBody request: AccountBookResetPasswordRequest,
+    ): ApiResponse<AccountBookResetPasswordResponse> {
         return ApiResponseFactory.success(
-            ResetPasswordResponse(authService.resetPassword(request.resetPasswordToken)),
+            AccountBookResetPasswordResponse(authService.resetPassword(request.resetPasswordToken)),
         )
     }
 }

@@ -32,7 +32,7 @@ class SecurityConfiguration(
 
         val PERMIT_URLS = arrayOf(
             PermitUrl(url = "/account-book/developers/**"),
-            PermitUrl(url = "/auths/**"),
+            PermitUrl(url = "/account-book/auths/**"),
         )
     }
 
