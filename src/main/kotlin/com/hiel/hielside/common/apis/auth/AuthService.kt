@@ -3,6 +3,7 @@ package com.hiel.hielside.common.apis.auth
 import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.ServiceType
 import com.hiel.hielside.common.domains.auth.TokenType
+import com.hiel.hielside.common.domains.auth.UserDetailsImpl
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.domains.user.UserType
 import com.hiel.hielside.common.exceptions.ServiceException
@@ -38,13 +39,16 @@ class AuthService(
 //    private val webClientUrl: String,
 ) {
     fun signup(
-        serviceType: ServiceType,
         email: String,
         password: String,
         name: String,
         userType: UserType,
+        serviceType: ServiceType,
     ) {
-        userRepository.findFirstByEmail(email)?.let {
+        userRepository.findFirstByEmailAndServiceType(
+            email = email,
+            serviceType = serviceType,
+        )?.let {
             throw ServiceException(ResultCode.Auth.DUPLICATED_EMAIL)
         }
 
@@ -86,9 +90,13 @@ class AuthService(
     fun login(
         email: String,
         password: String,
+        serviceType: ServiceType,
     ): IssueTokenResponse {
-        val user = userRepository.findFirstByEmailAndUserStatus(email = email, userStatus = UserStatus.AVAILABLE)
-            ?: throw ServiceException(ResultCode.Auth.INVALID_EMAIL_OR_PASSWORD)
+        val user = userRepository.findFirstByEmailAndUserStatusAndServiceType(
+            email = email,
+            userStatus = UserStatus.AVAILABLE,
+            serviceType = serviceType,
+        ) ?: throw ServiceException(ResultCode.Auth.INVALID_EMAIL_OR_PASSWORD)
         if (!passwordEncoder.matches(password, user.encryptPassword)) {
             throw ServiceException(ResultCode.Auth.INVALID_EMAIL_OR_PASSWORD)
         }
@@ -102,13 +110,16 @@ class AuthService(
 
     fun refreshToken(refreshToken: String): IssueTokenResponse {
         try {
-            val userDetails = jwtTokenUtility.parseToken(token = refreshToken, tokenType = TokenType.REFRESH_TOKEN)
+            val userDetails: UserDetailsImpl = jwtTokenUtility.parseToken(token = refreshToken, tokenType = TokenType.REFRESH_TOKEN)
+
             refreshTokenRedisRepository.findFirstByUserId(userDetails.id)
                 ?: throw ServiceException(ResultCode.Auth.INVALID_TOKEN)
-
             refreshTokenRedisRepository.deleteByUserId(userDetails.id)
-            val userEntity = userRepository.findFirstByEmailAndUserStatus(email = userDetails.email, userStatus = UserStatus.AVAILABLE)
-                ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+
+            val userEntity = userRepository.findFirstByIdAndUserStatus(
+                id = userDetails.id,
+                userStatus = UserStatus.AVAILABLE,
+            ) ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
 
             val authToken = jwtTokenUtility.generateAuthToken(userEntity)
             refreshTokenRedisRepository.save(RefreshTokenRedisEntity(userId = userEntity.id, refreshToken = authToken.refreshToken))
@@ -121,9 +132,15 @@ class AuthService(
         }
     }
 
-    fun requestPasswordReset(email: String) {
-        val user = userRepository.findFirstByEmailAndUserStatus(email = email, userStatus = UserStatus.AVAILABLE)
-            ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+    fun requestPasswordReset(
+        email: String,
+        serviceType: ServiceType,
+    ) {
+        val user = userRepository.findFirstByEmailAndUserStatusAndServiceType(
+            email = email,
+            userStatus = UserStatus.AVAILABLE,
+            serviceType = serviceType,
+        ) ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
 
         val resetPasswordToken = UUID.randomUUID().toString()
         resetPasswordTokenRedisRepository.save(ResetPasswordTokenRedisEntity(userId = user.id, resetPasswordToken = resetPasswordToken))

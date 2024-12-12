@@ -21,11 +21,11 @@ class AuthRestApiController(
     ): ApiResponse<Unit> {
         request.validate()
         authService.signup(
-            serviceType = request.serviceType,
             email = request.email,
             password = passwordEncoder.encode(request.password),
             name = request.name,
             userType = request.userType,
+            serviceType = request.serviceType,
         )
         return ApiResponseFactory.success()
     }
@@ -42,7 +42,11 @@ class AuthRestApiController(
     fun login(
         @RequestBody request: LoginRequest,
     ): ApiResponse<IssueTokenResponse> {
-        return ApiResponseFactory.success(authService.login(email = request.email, password = request.password))
+        return ApiResponseFactory.success(authService.login(
+            email = request.email,
+            password = request.password,
+            serviceType = request.serviceType,
+        ))
     }
 
     @PostMapping("/refresh")
@@ -56,7 +60,10 @@ class AuthRestApiController(
     fun requestPasswordReset(
         @RequestBody request: RequestPasswordResetRequest,
     ): ApiResponse<Unit> {
-        authService.requestPasswordReset(request.email)
+        authService.requestPasswordReset(
+            email = request.email,
+            serviceType = request.serviceType,
+        )
         return ApiResponseFactory.success()
     }
 

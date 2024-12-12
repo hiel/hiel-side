@@ -1,0 +1,14 @@
+### 내역 등록
+POST {{host}}/account-book/transactions
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{access-token}}
+
+{
+    "incomeExpenseType": "EXPENSE",
+    "title": "맥도날드",
+    "price": 10000,
+    "isWaste": false,
+    "budgetCategoryId": 1,
+    "transactionCategoryId": 1,
+    "transactionDate": "20240101"
+}

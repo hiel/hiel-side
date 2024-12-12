@@ -6,6 +6,8 @@ interface ResultCode {
     enum class Common(private val message: String? = null) : ResultCode {
         SUCCESS,
         FAIL("요청에 실패하였습니다."),
+        NOT_EXIST_RESOURCE("없는 정보입니다"),
+        EXIST_RESOURCE("이미 등록된 정보입니다."),
         ;
 
         override fun getMessage(vararg args: Any) = message?.let { String.format(it, *args) }

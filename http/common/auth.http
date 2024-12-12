@@ -16,7 +16,8 @@ Content-Type: application/json; charset=utf-8
     "email": "yangjunghooon@gmail.com",
     "password": "yangjunghooon",
     "name": "yangjunghooon",
-    "userType": "MASTER"
+    "userType": "MASTER",
+    "serviceType": "ACCOUNT_BOOK"
 }
 
 
@@ -25,7 +26,7 @@ PUT {{host}}/auths/signup/certificate
 Content-Type: application/json; charset=utf-8
 
 {
-    "signupToken": "c9333ae6-c916-42ac-ac9a-89ac03eb3096"
+    "signupToken": "36ae257c-f936-4bdd-a7cc-84a7e7b91a28"
 }
 
 
@@ -35,7 +36,8 @@ Content-Type: application/json; charset=utf-8
 
 {
     "email": "{{email}}",
-    "password": "{{password}}"
+    "password": "{{password}}",
+    "serviceType": "ACCOUNT_BOOK"
 }
 
 > {%
@@ -63,7 +65,8 @@ POST {{host}}/auths/password/reset/request
 Content-Type: application/json; charset=utf-8
 
 {
-    "email": "yangjunghooon@gmail.com"
+    "email": "yangjunghooon@gmail.com",
+    "serviceType": "ACCOUNT_BOOK"
 }
 
 
@@ -72,5 +75,5 @@ PUT {{host}}/auths/password/reset
 Content-Type: application/json; charset=utf-8
 
 {
-    "resetPasswordToken": "c9333ae6-c916-42ac-ac9a-89ac03eb3096"
+    "resetPasswordToken": "7b20dcf7-80e8-4b0d-b478-f0e8f56c4540"
 }

@@ -43,6 +43,7 @@ data class CertificateSignupRequest(
 data class LoginRequest(
     val email: String,
     val password: String,
+    val serviceType: ServiceType,
 )
 
 data class IssueTokenResponse(
@@ -71,6 +72,7 @@ data class RefreshTokenRequest(
 
 data class RequestPasswordResetRequest(
     val email: String,
+    val serviceType: ServiceType,
 )
 
 data class ResetPasswordRequest(

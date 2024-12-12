@@ -1,0 +1,8 @@
+### 내역 카테고리 등록
+POST {{host}}/account-book/transaction-categories
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{access-token}}
+
+{
+    "name": "식비"
+}

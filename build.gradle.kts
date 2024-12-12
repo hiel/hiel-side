@@ -64,9 +64,10 @@ dependencies {
 }
 
 flyway {
-    url = "jdbc:mysql://localhost:3306/hiel_side"
+    url = "jdbc:mysql://localhost:3306"
     user = "root"
     password = ""
+    schemas = arrayOf("hiel_side", "account_book")
 }
 
 // querydsl

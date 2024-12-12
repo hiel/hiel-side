@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -30,6 +31,7 @@ class SecurityConfiguration(
         )
 
         val PERMIT_URLS = arrayOf(
+            PermitUrl(url = "/account-book/developers/**"),
             PermitUrl(url = "/auths/**"),
         )
     }
@@ -51,9 +53,9 @@ class SecurityConfiguration(
                         return@forEach
                     }
                     if (permitUrl.method != null) {
-                        auth.requestMatchers(permitUrl.method, permitUrl.url).permitAll()
+                        auth.requestMatchers(antMatcher(permitUrl.method), antMatcher(permitUrl.url)).permitAll()
                     } else {
-                        auth.requestMatchers(permitUrl.url).permitAll()
+                        auth.requestMatchers(antMatcher(permitUrl.url)).permitAll()
                     }
                 }
                 auth.anyRequest().authenticated()

@@ -1,0 +1,33 @@
+package com.hiel.hielside.accountbook.apis.transaction
+
+import com.hiel.hielside.accountbook.domains.IncomeExpenseType
+import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryEntity
+import com.hiel.hielside.accountbook.jpa.transaction.TransactionEntity
+import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryEntity
+import com.hiel.hielside.common.jpa.user.UserEntity
+import com.hiel.hielside.common.utilities.toOffsetDateTime
+
+data class RegisterTransactionRequest(
+    val incomeExpenseType: IncomeExpenseType,
+    val title: String,
+    val price: Long,
+    val isWaste: Boolean = false,
+    val budgetCategoryId: Long,
+    val transactionCategoryId: Long,
+    val transactionDate: String,
+) {
+    fun build(
+        user: UserEntity,
+        budgetCategory: BudgetCategoryEntity,
+        transactionCategory: TransactionCategoryEntity,
+    ) = TransactionEntity(
+        incomeExpenseType = incomeExpenseType,
+        title = title,
+        price = price,
+        isWaste = isWaste,
+        user = user,
+        budgetCategory = budgetCategory,
+        transactionCategory = transactionCategory,
+        transactionDatetime = transactionDate.toOffsetDateTime("yyyyMMdd"),
+    )
+}

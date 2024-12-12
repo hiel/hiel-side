@@ -12,7 +12,7 @@ import org.hibernate.envers.RevisionTimestamp
 import java.time.LocalDateTime
 
 @RevisionEntity
-@Table(name = "revinfo", schema = "common")
+@Table(name = "revinfo", catalog = "hiel_side")
 @Entity
 class RevinfoEntity(
     @RevisionNumber
