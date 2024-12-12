@@ -6,3 +6,9 @@ Authorization: Bearer {{access-token}}
 {
     "name": "국민은행"
 }
+
+
+### 예산 카테고리 목록 조회
+GET {{host}}/account-book/budget-categories
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{access-token}}

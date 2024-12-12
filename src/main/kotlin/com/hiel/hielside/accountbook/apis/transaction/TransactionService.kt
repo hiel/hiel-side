@@ -56,7 +56,7 @@ class TransactionService(
             transactionDatetimeStart = transactionYearMonth.convertToFirstDayOfMonth(),
             transactionDatetimeEnd = transactionYearMonth.convertToLastDayOfMonth(),
             user = user,
-            pageOf(page, pageSize),
+            pageable = pageOf(page, pageSize),
         )
     }
 }

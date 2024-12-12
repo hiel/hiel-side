@@ -4,6 +4,8 @@ import com.hiel.hielside.common.domains.ApiResponse
 import com.hiel.hielside.common.domains.ApiSliceResponse
 import com.hiel.hielside.common.domains.auth.UserDetailsImpl
 import com.hiel.hielside.common.utilities.ApiResponseFactory
+import com.hiel.hielside.common.utilities.getNowKst
+import com.hiel.hielside.common.utilities.toFormatString
 import com.hiel.hielside.common.utilities.toOffsetDateTime
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
@@ -35,11 +37,16 @@ class TransactionRestApiController(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @RequestParam("page") page: Int,
         @RequestParam("pageSize") pageSize: Int,
-        @RequestParam("transactionYearMonth") transactionYearMonth: String,
+        @RequestParam("transactionYearMonth") transactionYearMonth: String? = null,
     ): ApiSliceResponse<GetAllTransactionResponse> {
+        var yearMonth = transactionYearMonth
+        if (transactionYearMonth == null) {
+            yearMonth = getNowKst().toFormatString("yyyyMM")
+        }
+
         return ApiResponseFactory.sliceOf(
             list = transactionService.getAll(
-                transactionYearMonth = "${transactionYearMonth}01".toOffsetDateTime("yyyyMMdd"),
+                transactionYearMonth = "${yearMonth}01".toOffsetDateTime("yyyyMMdd"),
                 page = page,
                 pageSize = pageSize,
                 userId = userDetails.id,

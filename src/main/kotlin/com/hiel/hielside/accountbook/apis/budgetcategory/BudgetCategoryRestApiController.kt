@@ -4,6 +4,7 @@ import com.hiel.hielside.common.domains.ApiResponse
 import com.hiel.hielside.common.domains.auth.UserDetailsImpl
 import com.hiel.hielside.common.utilities.ApiResponseFactory
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -24,5 +25,14 @@ class BudgetCategoryRestApiController(
             userId = userDetails.id,
         )
         return ApiResponseFactory.success()
+    }
+
+    @GetMapping("")
+    fun getAll(
+        @AuthenticationPrincipal userDetails: UserDetailsImpl,
+    ): ApiResponse<GetAllBudgetCategoryResponse> {
+        return ApiResponseFactory.success(
+            GetAllBudgetCategoryResponse.build(budgetCategoryService.getAll(userId = userDetails.id))
+        )
     }
 }

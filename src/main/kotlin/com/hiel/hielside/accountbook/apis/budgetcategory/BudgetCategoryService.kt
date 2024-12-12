@@ -31,4 +31,10 @@ class BudgetCategoryService(
             )
         )
     }
+
+    fun getAll(userId: Long): List<BudgetCategoryEntity> {
+        val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
+            ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+        return budgetCategoryRepository.findAllByUser(user)
+    }
 }
