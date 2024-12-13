@@ -11,7 +11,8 @@ import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.domains.user.UserType
-import com.hiel.hielside.common.utilities.toOffsetDateTime
+import com.hiel.hielside.common.utilities.getNowKst
+import com.hiel.hielside.common.utilities.toFormatString
 import jakarta.transaction.Transactional
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
@@ -33,7 +34,7 @@ class DeveloperRestApiController(
         val userCount = 5
         val budgetCategoryNames = listOf("국민은행", "현대카드", "비상금")
         val transactionCategoryNames = listOf("식비", "커피", "모임")
-        val transactionCount = 30
+        val transactionCount = 10
 
         val userEntities = userRepository.saveAll(
             (1..userCount).map {
@@ -66,16 +67,22 @@ class DeveloperRestApiController(
         )
 
         (1..transactionCount).forEach {
+            val datetime = getNowKst()
+                .plusMonths((-2..2).random().toLong())
+                .withDayOfMonth((1..28).random())
+                .withHour((0..23).random())
+                .withMinute((0..59).random())
+                .withSecond((0..59).random())
             transactionRepository.save(
                 TransactionEntity(
                     incomeExpenseType = (IncomeExpenseType.entries + List(9) { IncomeExpenseType.EXPENSE }).random(),
-                    title = "transaction$it",
-                    price = listOf(10000, 12000, 1000, 500, 3000).random().toLong(),
+                    title = "내역${datetime.toFormatString("yyMMdd")}",
+                    price = ((100..100000).random() / 10 * 10).toLong(),
                     isWaste = listOf(true, false).random(),
                     user = userEntities.first(),
                     budgetCategory = budgetCategoryEntities.random(),
                     transactionCategory = transactionCategoryEntities.random(),
-                    transactionDatetime = "20240101".toOffsetDateTime("yyyyMMdd"),
+                    transactionDatetime = datetime,
                 )
             )
         }

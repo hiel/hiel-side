@@ -11,6 +11,7 @@ import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.utilities.convertToFirstDayOfMonth
 import com.hiel.hielside.common.utilities.convertToLastDayOfMonth
 import com.hiel.hielside.common.utilities.pageOf
+import org.springframework.data.domain.Slice
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -44,17 +45,17 @@ class TransactionService(
         )
     }
 
-    fun getAll(
-        transactionYearMonth: OffsetDateTime,
+    fun getSlice(
+        transactionDatetime: OffsetDateTime,
         page: Int,
         pageSize: Int,
         userId: Long,
-    ): List<TransactionEntity> {
+    ): Slice<TransactionEntity> {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
-        return transactionRepository.findAllByTransactionDatetimeBetweenAndUserOrderByTransactionDatetimeAsc(
-            transactionDatetimeStart = transactionYearMonth.convertToFirstDayOfMonth(),
-            transactionDatetimeEnd = transactionYearMonth.convertToLastDayOfMonth(),
+        return transactionRepository.findAllByTransactionDatetimeBetweenAndUserOrderByTransactionDatetimeDesc(
+            transactionDatetimeStart = transactionDatetime.convertToFirstDayOfMonth(),
+            transactionDatetimeEnd = transactionDatetime.convertToLastDayOfMonth(),
             user = user,
             pageable = pageOf(page, pageSize),
         )

@@ -7,6 +7,7 @@ import com.hiel.hielside.common.domains.auth.TokenType
 import com.hiel.hielside.common.exceptions.ServiceException
 import com.hiel.hielside.common.utilities.BLANK_CHAR
 import com.hiel.hielside.common.utilities.JwtTokenUtility
+import com.hiel.hielside.common.utilities.LogUtility
 import com.hiel.hielside.common.utilities.substringOrNull
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -23,7 +24,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtAuthenticationFilter(
     private val jwtTokenUtility: JwtTokenUtility,
 ) : OncePerRequestFilter() {
-    companion object {
+    companion object : LogUtility {
         private const val HEADER_PREFIX = "Bearer$BLANK_CHAR"
     }
 
@@ -35,11 +36,11 @@ class JwtAuthenticationFilter(
         try {
             val isOptionalAuth = isOptionalAuth(request)
             val authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION)
-            if (isOptionalAuth && authorizationHeader == null) {
+            if (isOptionalAuth) {
                 filterChain.doFilter(request, response)
                 return
             }
-            if (!authorizationHeader.startsWith(HEADER_PREFIX)) {
+            if (authorizationHeader == null || !authorizationHeader.startsWith(HEADER_PREFIX)) {
                 throw ServiceException(ResultCode.Auth.INVALID_TOKEN)
             }
             val token = authorizationHeader.substringOrNull(HEADER_PREFIX.length)
@@ -47,8 +48,10 @@ class JwtAuthenticationFilter(
             val user = jwtTokenUtility.parseToken(token = token, tokenType = TokenType.ACCESS_TOKEN)
             SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(user, token, user.authorities)
         } catch (e: ServiceException) {
+            log.error(e.toString())
             request.setAttribute(JwtAuthenticationEntryPoint.EXCEPTION_ATTRIBUTE_NAME, e)
         } catch (e: Exception) {
+            log.error(e.toString())
             request.setAttribute(
                 JwtAuthenticationEntryPoint.EXCEPTION_ATTRIBUTE_NAME,
                 ServiceException(resultCode = ResultCode.Auth.AUTHENTICATION_FAIL),

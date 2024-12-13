@@ -9,5 +9,4 @@ interface AccountBookUserRepository : JpaRepository<AccountBookUserEntity, Long>
     fun findFirstByIdAndUserStatus(id: Long, userStatus: UserStatus): AccountBookUserEntity?
 
     fun findFirstByEmailAndUserStatus(email: String, userStatus: UserStatus): AccountBookUserEntity?
-    fun name(name: String): MutableList<AccountBookUserEntity>
 }

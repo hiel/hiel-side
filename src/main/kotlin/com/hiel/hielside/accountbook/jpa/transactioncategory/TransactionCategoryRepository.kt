@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface TransactionCategoryRepository : JpaRepository<TransactionCategoryEntity, Long> {
     fun findAllByUser(user: AccountBookUserEntity): List<TransactionCategoryEntity>
+
     fun findFirstByNameAndUser(name: String, user: AccountBookUserEntity): TransactionCategoryEntity?
 }

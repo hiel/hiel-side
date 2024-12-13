@@ -30,6 +30,8 @@ fun OffsetDateTime.convertToFirstDayOfMonth(): OffsetDateTime = this.withDayOfMo
 
 fun OffsetDateTime.convertToLastDayOfMonth(): OffsetDateTime = this.withDayOfMonth(this.toLocalDate().lengthOfMonth())
 
+fun OffsetDateTime.initializeTime(): OffsetDateTime = this.withHour(0).withMinute(0).withSecond(0).withNano(0)
+
 fun Int.hourToMinute() = (this * MINUTE_PER_HOUR).toLong()
 
 fun Int.hourToSecond() = (this * MINUTE_PER_HOUR * SECOND_PER_MINUTE).toLong()
