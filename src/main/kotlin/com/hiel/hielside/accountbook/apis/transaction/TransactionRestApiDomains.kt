@@ -35,6 +35,44 @@ data class RegisterTransactionRequest(
     )
 }
 
+data class UpdateTransactionRequest(
+    val incomeExpenseType: IncomeExpenseType,
+    val title: String,
+    val price: Long,
+    val isWaste: Boolean = false,
+    val budgetCategoryId: Long,
+    val transactionCategoryId: Long,
+    val transactionDate: OffsetDateTime,
+)
+
+data class GetTransactionDetailResponse(
+    val id: Long,
+    val date: String,
+    val price: Long,
+    val title: String,
+    val budgetCategoryId: Long,
+    val budgetCategoryName: String,
+    val transactionCategoryId: Long,
+    val transactionCategoryName: String,
+    val incomeExpenseType: IncomeExpenseType,
+    val isWaste: Boolean,
+) {
+    companion object {
+        fun build(transaction: TransactionEntity) = GetTransactionDetailResponse(
+            id = transaction.id,
+            date = transaction.transactionDatetime.toFormatString(),
+            price = transaction.price,
+            title = transaction.title,
+            budgetCategoryId = transaction.budgetCategory.id,
+            budgetCategoryName = transaction.budgetCategory.name,
+            transactionCategoryId = transaction.transactionCategory.id,
+            transactionCategoryName = transaction.transactionCategory.name,
+            incomeExpenseType = transaction.incomeExpenseType,
+            isWaste = transaction.isWaste,
+        )
+    }
+}
+
 data class GetAllTransactionResponse(
     val slice: SliceResponseData<GetAllTransactionResponseDetail>,
     val transactionDatetime: OffsetDateTime,
@@ -42,12 +80,12 @@ data class GetAllTransactionResponse(
     data class GetAllTransactionResponseDetail(
         val id: Long,
         val date: String,
+        val price: Long,
+        val title: String,
         val budgetCategoryId: Long,
         val budgetCategoryName: String,
         val transactionCategoryId: Long,
         val transactionCategoryName: String,
-        val title: String,
-        val price: Long,
         val incomeExpenseType: IncomeExpenseType,
         val isWaste: Boolean,
     ) {
@@ -55,12 +93,12 @@ data class GetAllTransactionResponse(
             fun build(transaction: TransactionEntity) = GetAllTransactionResponseDetail(
                 id = transaction.id,
                 date = transaction.transactionDatetime.toFormatString(format = "yyyyMMdd"),
+                price = transaction.price,
+                title = transaction.title,
                 budgetCategoryId = transaction.budgetCategory.id,
                 budgetCategoryName = transaction.budgetCategory.name,
                 transactionCategoryId = transaction.transactionCategory.id,
                 transactionCategoryName = transaction.transactionCategory.name,
-                title = transaction.title,
-                price = transaction.price,
                 incomeExpenseType = transaction.incomeExpenseType,
                 isWaste = transaction.isWaste,
             )

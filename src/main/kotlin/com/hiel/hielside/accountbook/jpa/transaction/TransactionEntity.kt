@@ -28,16 +28,16 @@ class TransactionEntity(
 
     @Column(name = "income_expense_type", nullable = false, length = 20)
     @Enumerated(value = EnumType.STRING)
-    val incomeExpenseType: IncomeExpenseType,
+    var incomeExpenseType: IncomeExpenseType,
 
     @Column(name = "title")
-    val title: String,
+    var title: String,
 
     @Column(name = "price")
-    val price: Long,
+    var price: Long,
 
     @Column(name = "is_waste")
-    val isWaste: Boolean,
+    var isWaste: Boolean,
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -45,11 +45,11 @@ class TransactionEntity(
 
     @ManyToOne
     @JoinColumn(name = "budget_category_id", nullable = false)
-    val budgetCategory: BudgetCategoryEntity,
+    var budgetCategory: BudgetCategoryEntity,
 
     @ManyToOne
     @JoinColumn(name = "transaction_category_id", nullable = false)
-    val transactionCategory: TransactionCategoryEntity,
+    var transactionCategory: TransactionCategoryEntity,
 
     @Column(name = "transaction_datetime", nullable = false)
     var transactionDatetime: OffsetDateTime

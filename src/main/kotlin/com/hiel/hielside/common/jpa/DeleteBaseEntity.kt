@@ -1,5 +1,6 @@
 package com.hiel.hielside.common.jpa
 
+import com.hiel.hielside.common.utilities.getNowKst
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
 import java.time.OffsetDateTime
@@ -14,4 +15,10 @@ abstract class DeleteBaseEntity : BaseEntity() {
 
     @Column(name = "deleted_by")
     var deletedBy: Long? = null
+
+    fun delete(deletedBy: Long) {
+        isDeleted = true
+        deletedAt = getNowKst()
+        this.deletedBy = deletedBy
+    }
 }

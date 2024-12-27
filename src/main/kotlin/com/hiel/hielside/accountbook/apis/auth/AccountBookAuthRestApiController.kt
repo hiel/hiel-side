@@ -20,12 +20,8 @@ class AccountBookAuthRestApiController(
         @RequestBody request: AccountBookSignupRequest,
     ): ApiResponse<Unit> {
         request.validate()
-        authService.signup(
-            email = request.email,
-            password = passwordEncoder.encode(request.password),
-            name = request.name,
-            userType = request.userType,
-        )
+        authService.signup(email = request.email, password = passwordEncoder.encode(request.password), name = request.name
+            , userType = request.userType)
         return ApiResponseFactory.success()
     }
 
@@ -41,10 +37,7 @@ class AccountBookAuthRestApiController(
     fun login(
         @RequestBody request: AccountBookLoginRequest,
     ): ApiResponse<AccountBookIssueTokenResponse> {
-        return ApiResponseFactory.success(authService.login(
-            email = request.email,
-            password = request.password,
-        ))
+        return ApiResponseFactory.success(authService.login(email = request.email, password = request.password))
     }
 
     @PostMapping("/refresh")
@@ -58,9 +51,7 @@ class AccountBookAuthRestApiController(
     fun requestPasswordReset(
         @RequestBody request: AccountBookRequestPasswordResetRequest,
     ): ApiResponse<Unit> {
-        authService.requestPasswordReset(
-            email = request.email,
-        )
+        authService.requestPasswordReset(request.email)
         return ApiResponseFactory.success()
     }
 
@@ -68,8 +59,6 @@ class AccountBookAuthRestApiController(
     fun resetPassword(
         @RequestBody request: AccountBookResetPasswordRequest,
     ): ApiResponse<AccountBookResetPasswordResponse> {
-        return ApiResponseFactory.success(
-            AccountBookResetPasswordResponse(authService.resetPassword(request.resetPasswordToken)),
-        )
+        return ApiResponseFactory.success(AccountBookResetPasswordResponse(authService.resetPassword(request.resetPasswordToken)))
     }
 }

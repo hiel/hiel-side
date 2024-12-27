@@ -4,10 +4,10 @@ import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryRepository
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionEntity
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionRepository
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryRepository
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
-import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.utilities.convertToFirstDayOfMonth
 import com.hiel.hielside.common.utilities.convertToLastDayOfMonth
 import com.hiel.hielside.common.utilities.pageOf
@@ -25,10 +25,7 @@ class TransactionService(
     private val transactionCategoryRepository: TransactionCategoryRepository,
 ) {
     @Transactional
-    fun register(
-        request: RegisterTransactionRequest,
-        userId: Long,
-    ) {
+    fun register(request: RegisterTransactionRequest, userId: Long) {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         val budgetCategory = budgetCategoryRepository.findByIdOrNull(request.budgetCategoryId)
@@ -45,6 +42,41 @@ class TransactionService(
         )
     }
 
+    @Transactional
+    fun update(transactionId: Long, request: UpdateTransactionRequest, userId: Long) {
+        val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
+            ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+        val transaction = transactionRepository.findFirstByIdAndUserAndIsDeleted(id = transactionId, user = user, isDeleted = false)
+            ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
+
+        transaction.incomeExpenseType = request.incomeExpenseType
+        transaction.title = request.title
+        transaction.price = request.price
+        transaction.isWaste = request.isWaste
+        transaction.budgetCategory = budgetCategoryRepository.findByIdOrNull(request.budgetCategoryId)
+            ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
+        transaction.transactionCategory = transactionCategoryRepository.findByIdOrNull(request.transactionCategoryId)
+            ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
+        transaction.transactionDatetime = request.transactionDate
+    }
+
+    @Transactional
+    fun delete(transactionId: Long, userId: Long) {
+        val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
+            ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+        val transaction = transactionRepository.findFirstByIdAndUser(id = transactionId, user = user)
+            ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
+
+        transaction.delete(userId)
+    }
+
+    fun getDetail(transactionId: Long, userId: Long): TransactionEntity {
+        val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
+            ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+        return transactionRepository.findFirstByIdAndUserAndIsDeleted(id = transactionId, user = user, isDeleted = false)
+            ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
+    }
+
     fun getSlice(
         transactionDatetime: OffsetDateTime,
         page: Int,
@@ -53,10 +85,11 @@ class TransactionService(
     ): Slice<TransactionEntity> {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
-        return transactionRepository.findAllByTransactionDatetimeBetweenAndUserOrderByTransactionDatetimeDesc(
+        return transactionRepository.findAllByTransactionDatetimeBetweenAndUserAndIsDeletedOrderByTransactionDatetimeDesc(
             transactionDatetimeStart = transactionDatetime.convertToFirstDayOfMonth(),
             transactionDatetimeEnd = transactionDatetime.convertToLastDayOfMonth(),
             user = user,
+            isDeleted = false,
             pageable = pageOf(page, pageSize),
         )
     }

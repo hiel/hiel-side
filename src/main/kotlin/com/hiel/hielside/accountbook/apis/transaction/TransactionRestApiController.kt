@@ -6,8 +6,11 @@ import com.hiel.hielside.common.utilities.ApiResponseFactory
 import com.hiel.hielside.common.utilities.getNowKst
 import com.hiel.hielside.common.utilities.initializeTime
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -24,11 +27,36 @@ class TransactionRestApiController(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @RequestBody request: RegisterTransactionRequest,
     ): ApiResponse<Unit> {
-        transactionService.register(
-            request = request,
-            userId = userDetails.id,
-        )
+        transactionService.register(request = request, userId = userDetails.id)
         return ApiResponseFactory.success()
+    }
+
+    @PutMapping("/{id}")
+    fun update(
+        @AuthenticationPrincipal userDetails: UserDetailsImpl,
+        @PathVariable id: Long,
+        @RequestBody request: UpdateTransactionRequest,
+    ): ApiResponse<Unit> {
+        transactionService.update(transactionId = id, request = request, userId = userDetails.id)
+        return ApiResponseFactory.success()
+    }
+
+    @DeleteMapping("/{id}")
+    fun delete(
+        @AuthenticationPrincipal userDetails: UserDetailsImpl,
+        @PathVariable id: Long,
+    ): ApiResponse<Unit> {
+        transactionService.delete(transactionId = id, userId = userDetails.id)
+        return ApiResponseFactory.success()
+    }
+
+    @GetMapping("/{id}")
+    fun getDetail(
+        @AuthenticationPrincipal userDetails: UserDetailsImpl,
+        @PathVariable id: Long,
+    ): ApiResponse<GetTransactionDetailResponse> {
+        return ApiResponseFactory.success(
+            GetTransactionDetailResponse.build(transactionService.getDetail(transactionId = id, userId = userDetails.id)))
     }
 
     @GetMapping("")

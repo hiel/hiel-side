@@ -37,6 +37,7 @@ class AccountBookAuthService(
 //    @Value("\${web-client-url}")
 //    private val webClientUrl: String,
 ) {
+    @Transactional
     fun signup(
         email: String,
         password: String,
@@ -108,10 +109,8 @@ class AccountBookAuthService(
                 ?: throw ServiceException(ResultCode.Auth.INVALID_TOKEN)
             refreshTokenRedisRepository.deleteByUserId(userDetails.id)
 
-            val userEntity = userRepository.findFirstByIdAndUserStatus(
-                id = userDetails.id,
-                userStatus = UserStatus.AVAILABLE,
-            ) ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+            val userEntity = userRepository.findFirstByIdAndUserStatus(id = userDetails.id, userStatus = UserStatus.AVAILABLE)
+                ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
 
             val authToken = jwtTokenUtility.generateAuthToken(userEntity)
             refreshTokenRedisRepository.save(RefreshTokenRedisEntity(userId = userEntity.id, refreshToken = authToken.refreshToken))
@@ -127,10 +126,8 @@ class AccountBookAuthService(
     fun requestPasswordReset(
         email: String,
     ) {
-        val user = userRepository.findFirstByEmailAndUserStatus(
-            email = email,
-            userStatus = UserStatus.AVAILABLE,
-        ) ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+        val user = userRepository.findFirstByEmailAndUserStatus(email = email, userStatus = UserStatus.AVAILABLE)
+            ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
 
         val resetPasswordToken = UUID.randomUUID().toString()
         resetPasswordTokenRedisRepository.save(ResetPasswordTokenRedisEntity(userId = user.id, resetPasswordToken = resetPasswordToken))
