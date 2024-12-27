@@ -35,4 +35,7 @@ class BudgetCategoryRestApiController(
             GetAllBudgetCategoryResponse.build(budgetCategoryService.getAll(userId = userDetails.id))
         )
     }
+
+    // TODO: update
+    // TODO: delete
 }

@@ -35,4 +35,7 @@ class TransactionCategoryRestApiController(
             GetAllTransactionCategoryResponse.build(transactionCategoryService.getAll(userId = userDetails.id))
         )
     }
+
+    // TODO: update
+    // TODO: delete
 }

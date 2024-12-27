@@ -1,7 +1,7 @@
 package com.hiel.hielside.accountbook.jpa.budgetcategory
 
-import com.hiel.hielside.common.jpa.BaseEntity
 import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
+import com.hiel.hielside.common.jpa.DeleteBaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -26,4 +26,4 @@ class BudgetCategoryEntity(
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     val user: AccountBookUserEntity,
-) : BaseEntity()
+) : DeleteBaseEntity()

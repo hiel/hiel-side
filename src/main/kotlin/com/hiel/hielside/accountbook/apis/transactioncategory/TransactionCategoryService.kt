@@ -7,6 +7,7 @@ import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
 import jakarta.transaction.Transactional
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -33,7 +34,7 @@ class TransactionCategoryService(
     }
 
     fun getAll(userId: Long): List<TransactionCategoryEntity> {
-        val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
+        val user = userRepository.findByIdOrNull(id = userId)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         return transactionCategoryRepository.findAllByUser(user)
     }
