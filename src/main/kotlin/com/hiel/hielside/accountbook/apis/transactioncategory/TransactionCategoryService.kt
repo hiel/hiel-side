@@ -7,7 +7,6 @@ import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
 import jakarta.transaction.Transactional
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,21 +15,12 @@ class TransactionCategoryService(
     private val transactionCategoryRepository: TransactionCategoryRepository,
 ) {
     @Transactional
-    fun register(
-        name: String,
-        userId: Long,
-    ) {
+    fun register(name: String, userId: Long) {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         transactionCategoryRepository.findFirstByNameAndUser(name = name, user = user)?.let {
-            throw ServiceException(ResultCode.Common.EXIST_RESOURCE)
-        }
-        transactionCategoryRepository.save(
-            TransactionCategoryEntity(
-                name = name,
-                user = user,
-            )
-        )
+            throw ServiceException(ResultCode.Common.EXIST_RESOURCE) }
+        transactionCategoryRepository.save(TransactionCategoryEntity(name = name, user = user))
     }
 
     @Transactional
@@ -40,7 +30,6 @@ class TransactionCategoryService(
         val transactionCategory = transactionCategoryRepository.findFirstByIdAndUserAndIsDeleted(
             id = transactionCategoryId, user = user, isDeleted = false)
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
-
         transactionCategory.name = name
     }
 
@@ -54,7 +43,7 @@ class TransactionCategoryService(
     }
 
     fun getAll(userId: Long): List<TransactionCategoryEntity> {
-        val user = userRepository.findByIdOrNull(id = userId)
+        val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         return transactionCategoryRepository.findAllByUserAndIsDeleted(user = user, isDeleted = false)
     }

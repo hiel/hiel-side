@@ -21,7 +21,7 @@ class BudgetCategoryEntity(
     val id: Long = 0,
 
     @Column(name = "name", nullable = false, length = 20)
-    val name: String,
+    var name: String,
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

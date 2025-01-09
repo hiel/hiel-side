@@ -6,6 +6,10 @@ data class RegisterBudgetCategoryRequest(
     val name: String,
 )
 
+data class UpdateBudgetCategoryRequest(
+    val name: String,
+)
+
 data class GetAllBudgetCategoryResponse(
     val list: List<GetAllBudgetCategoryDetail>
 ) {
