@@ -33,9 +33,29 @@ class TransactionCategoryService(
         )
     }
 
+    @Transactional
+    fun update(transactionCategoryId: Long, name: String, userId: Long) {
+        val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
+            ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+        val transactionCategory = transactionCategoryRepository.findFirstByIdAndUserAndIsDeleted(
+            id = transactionCategoryId, user = user, isDeleted = false)
+            ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
+
+        transactionCategory.name = name
+    }
+
+    @Transactional
+    fun delete(transactionCategoryId: Long, userId: Long) {
+        val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
+            ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+        val transactionCategory = transactionCategoryRepository.findFirstByIdAndUser(id = transactionCategoryId, user = user)
+            ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
+        transactionCategory.delete(userId)
+    }
+
     fun getAll(userId: Long): List<TransactionCategoryEntity> {
         val user = userRepository.findByIdOrNull(id = userId)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
-        return transactionCategoryRepository.findAllByUser(user)
+        return transactionCategoryRepository.findAllByUserAndIsDeleted(user = user, isDeleted = false)
     }
 }

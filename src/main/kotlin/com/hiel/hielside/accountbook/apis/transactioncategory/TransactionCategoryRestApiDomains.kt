@@ -6,6 +6,10 @@ data class RegisterTransactionCategoryRequest(
     val name: String,
 )
 
+data class UpdateTransactionCategoryRequest(
+    val name: String,
+)
+
 data class GetAllTransactionCategoryResponse(
     val list: List<GetAllTransactionCategoryDetail>
 ) {

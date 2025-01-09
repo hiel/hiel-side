@@ -14,7 +14,7 @@ Authorization: Bearer {{access-token}}
 }
 
 
-### 내역 갱신
+### 내역 수정
 PUT {{host}}/account-book/transactions/1
 Content-Type: application/json; charset=utf-8
 Authorization: Bearer {{access-token}}
