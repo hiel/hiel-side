@@ -1,6 +1,7 @@
 package com.hiel.hielside.accountbook.apis.auth
 
 import com.hiel.hielside.common.domains.ApiResponse
+import com.hiel.hielside.common.domains.user.UserType
 import com.hiel.hielside.common.utilities.ApiResponseFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,7 +22,7 @@ class AccountBookAuthRestApiController(
     ): ApiResponse<Unit> {
         request.validate()
         authService.signup(email = request.email, password = passwordEncoder.encode(request.password), name = request.name
-            , userType = request.userType)
+            , userType = UserType.USER)
         return ApiResponseFactory.success()
     }
 

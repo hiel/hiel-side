@@ -5,7 +5,9 @@ import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryEntity
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionEntity
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryEntity
 import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
+import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.SliceResponseData
+import com.hiel.hielside.common.exceptions.ServiceException
 import com.hiel.hielside.common.utilities.toFormatString
 import org.springframework.data.domain.Slice
 import java.time.OffsetDateTime
@@ -19,6 +21,12 @@ data class RegisterTransactionRequest(
     val transactionCategoryId: Long,
     val transactionDate: OffsetDateTime,
 ) {
+    fun validate() {
+        if (incomeExpenseType == IncomeExpenseType.INCOME && isWaste) {
+            throw ServiceException(ResultCode.Transaction.INCOME_INVALID_IS_WASTE)
+        }
+    }
+
     fun build(
         user: AccountBookUserEntity,
         budgetCategory: BudgetCategoryEntity,
@@ -43,7 +51,13 @@ data class UpdateTransactionRequest(
     val budgetCategoryId: Long,
     val transactionCategoryId: Long,
     val transactionDate: OffsetDateTime,
-)
+) {
+    fun validate() {
+        if (incomeExpenseType == IncomeExpenseType.INCOME && isWaste) {
+            throw ServiceException(ResultCode.Transaction.INCOME_INVALID_IS_WASTE)
+        }
+    }
+}
 
 data class GetTransactionDetailResponse(
     val id: Long,

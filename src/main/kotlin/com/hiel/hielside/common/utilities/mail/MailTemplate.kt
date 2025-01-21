@@ -22,7 +22,7 @@ sealed class MailTemplate<T : MailTemplateParams>(
         ) : MailTemplateParams
 
         override fun subject(): String =
-            "Certificate Signup"
+            "가입 인증 메일"
 
         override fun text(): String = with(params) {
             """

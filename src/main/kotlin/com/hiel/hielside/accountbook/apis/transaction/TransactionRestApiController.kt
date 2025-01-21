@@ -27,6 +27,7 @@ class TransactionRestApiController(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @RequestBody request: RegisterTransactionRequest,
     ): ApiResponse<Unit> {
+        request.validate()
         transactionService.register(request = request, userId = userDetails.id)
         return ApiResponseFactory.success()
     }
@@ -37,6 +38,7 @@ class TransactionRestApiController(
         @PathVariable id: Long,
         @RequestBody request: UpdateTransactionRequest,
     ): ApiResponse<Unit> {
+        request.validate()
         transactionService.update(transactionId = id, request = request, userId = userDetails.id)
         return ApiResponseFactory.success()
     }

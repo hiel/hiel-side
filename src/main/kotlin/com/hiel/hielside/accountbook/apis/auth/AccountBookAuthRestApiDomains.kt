@@ -13,7 +13,6 @@ data class AccountBookSignupRequest(
     val email: String,
     val password: String,
     val name: String,
-    val userType: UserType,
 ) {
     fun validate() {
         if (!email.regexMatches(Regex.EMAIL)) {

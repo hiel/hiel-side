@@ -1,7 +1,7 @@
 package com.hiel.hielside.accountbook.apis.auth
 
-//import com.hiel.hielside.common.utilities.mail.MailUtility
-//import org.springframework.beans.factory.annotation.Value
+import com.hiel.hielside.common.utilities.mail.MailUtility
+import org.springframework.beans.factory.annotation.Value
 import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.domains.ResultCode
@@ -18,6 +18,7 @@ import com.hiel.hielside.common.redis.signuptoken.SignupTokenRedisEntity
 import com.hiel.hielside.common.redis.signuptoken.SignupTokenRedisRepository
 import com.hiel.hielside.common.utilities.JwtTokenUtility
 import com.hiel.hielside.common.utilities.getRandomString
+import com.hiel.hielside.common.utilities.mail.MailTemplate
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -30,12 +31,12 @@ class AccountBookAuthService(
     private val signupTokenRedisRepository: SignupTokenRedisRepository,
     private val refreshTokenRedisRepository: RefreshTokenRedisRepository,
     private val resetPasswordTokenRedisRepository: ResetPasswordTokenRedisRepository,
-//    private val mailUtility: MailUtility,
+    private val mailUtility: MailUtility,
     private val jwtTokenUtility: JwtTokenUtility,
     private val passwordEncoder: PasswordEncoder,
 
-//    @Value("\${web-client-url}")
-//    private val webClientUrl: String,
+    @Value("\${web-client-url}")
+    private val webClientUrl: String,
 ) {
     @Transactional
     fun signup(
@@ -45,7 +46,12 @@ class AccountBookAuthService(
         userType: UserType,
     ) {
         userRepository.findFirstByEmail(email)?.let {
-            throw ServiceException(ResultCode.Auth.DUPLICATED_EMAIL)
+            if (it.userStatus == UserStatus.NOT_CERTIFICATED) {
+                sendSignupCertificateMail(email = email, user = it)
+            } else {
+                throw ServiceException(ResultCode.Auth.DUPLICATED_EMAIL)
+            }
+            return
         }
 
         val user = userRepository.save(
@@ -58,15 +64,19 @@ class AccountBookAuthService(
             ),
         )
 
+        sendSignupCertificateMail(email = email, user = user)
+    }
+
+    private fun sendSignupCertificateMail(email: String, user: AccountBookUserEntity) {
         signupTokenRedisRepository.save(SignupTokenRedisEntity.build(user))
-//        val signupTokenRedis = signupTokenRedisRepository.save(SignupTokenRedisEntity.build(user))
-//        mailUtility.sendMail(
-//            to = email,
-//            template = MailTemplate.SignupCertificate(MailTemplate.SignupCertificate.Params(
-//                webClientUrl = webClientUrl,
-//                token = signupTokenRedis.signupToken,
-//            )),
-//        )
+        val signupTokenRedis = signupTokenRedisRepository.save(SignupTokenRedisEntity.build(user))
+        mailUtility.sendMail(
+            to = email,
+            template = MailTemplate.SignupCertificate(MailTemplate.SignupCertificate.Params(
+                webClientUrl = "${webClientUrl}/accountbook",
+                token = signupTokenRedis.signupToken,
+            )),
+        )
     }
 
     @Transactional
@@ -131,13 +141,13 @@ class AccountBookAuthService(
 
         val resetPasswordToken = UUID.randomUUID().toString()
         resetPasswordTokenRedisRepository.save(ResetPasswordTokenRedisEntity(userId = user.id, resetPasswordToken = resetPasswordToken))
-//        mailUtility.sendMail(
-//            to = email,
-//            template = MailTemplate.PasswordReset(MailTemplate.PasswordReset.Params(
-//                webClientUrl = webClientUrl,
-//                token = resetPasswordToken,
-//            ))
-//        )
+        mailUtility.sendMail(
+            to = email,
+            template = MailTemplate.PasswordReset(MailTemplate.PasswordReset.Params(
+                webClientUrl = webClientUrl,
+                token = resetPasswordToken,
+            ))
+        )
     }
 
     @Transactional

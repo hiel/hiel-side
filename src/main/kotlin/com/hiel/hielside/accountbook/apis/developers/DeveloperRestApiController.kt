@@ -73,12 +73,13 @@ class DeveloperRestApiController(
                 .withHour((0..23).random())
                 .withMinute((0..59).random())
                 .withSecond((0..59).random())
+            val incomeExpenseType = (IncomeExpenseType.entries + List(9) { IncomeExpenseType.EXPENSE }).random()
             transactionRepository.save(
                 TransactionEntity(
-                    incomeExpenseType = (IncomeExpenseType.entries + List(9) { IncomeExpenseType.EXPENSE }).random(),
+                    incomeExpenseType = incomeExpenseType,
                     title = "내역${datetime.toFormatString("yyMMdd")}",
                     price = ((100..100000).random() / 10 * 10).toLong(),
-                    isWaste = listOf(true, false).random(),
+                    isWaste = if (incomeExpenseType == IncomeExpenseType.INCOME) false else listOf(true, false).random(),
                     user = userEntities.first(),
                     budgetCategory = budgetCategoryEntities.random(),
                     transactionCategory = transactionCategoryEntities.random(),

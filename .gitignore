@@ -1,3 +1,4 @@
+src/main/resources/application-local.yml
 http/http-client.private.env.json
 .DS_Store
 
