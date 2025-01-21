@@ -1,6 +1,6 @@
 package com.hiel.hielside.accountbook.apis.transaction
 
-import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryRepository
+import com.hiel.hielside.accountbook.jpa.assetcategory.AssetCategoryRepository
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionEntity
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionRepository
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryRepository
@@ -21,14 +21,14 @@ import java.time.OffsetDateTime
 class TransactionService(
     private val userRepository: AccountBookUserRepository,
     private val transactionRepository: TransactionRepository,
-    private val budgetCategoryRepository: BudgetCategoryRepository,
+    private val assetCategoryRepository: AssetCategoryRepository,
     private val transactionCategoryRepository: TransactionCategoryRepository,
 ) {
     @Transactional
     fun register(request: RegisterTransactionRequest, userId: Long) {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
-        val budgetCategory = budgetCategoryRepository.findByIdOrNull(request.budgetCategoryId)
+        val assetCategory = assetCategoryRepository.findByIdOrNull(request.assetCategoryId)
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
         val transactionCategory = transactionCategoryRepository.findByIdOrNull(request.transactionCategoryId)
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
@@ -36,7 +36,7 @@ class TransactionService(
         transactionRepository.save(
             request.build(
                 user = user,
-                budgetCategory = budgetCategory,
+                assetCategory = assetCategory,
                 transactionCategory = transactionCategory,
             )
         )
@@ -53,7 +53,7 @@ class TransactionService(
         transaction.title = request.title
         transaction.price = request.price
         transaction.isWaste = request.isWaste
-        transaction.budgetCategory = budgetCategoryRepository.findByIdOrNull(request.budgetCategoryId)
+        transaction.assetCategory = assetCategoryRepository.findByIdOrNull(request.assetCategoryId)
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
         transaction.transactionCategory = transactionCategoryRepository.findByIdOrNull(request.transactionCategoryId)
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)

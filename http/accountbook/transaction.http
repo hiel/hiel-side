@@ -8,7 +8,7 @@ Authorization: Bearer {{access-token}}
     "title": "맥도날드",
     "price": 10000,
     "isWaste": false,
-    "budgetCategoryId": 1,
+    "assetCategoryId": 1,
     "transactionCategoryId": 1,
     "transactionDate": "2024-12-01T00:00:00.000+09:00"
 }
@@ -24,7 +24,7 @@ Authorization: Bearer {{access-token}}
     "title": "맥도날드",
     "price": 10000,
     "isWaste": false,
-    "budgetCategoryId": 1,
+    "assetCategoryId": 1,
     "transactionCategoryId": 1,
     "transactionDate": "2024-12-01T00:00:00.000+09:00"
 }

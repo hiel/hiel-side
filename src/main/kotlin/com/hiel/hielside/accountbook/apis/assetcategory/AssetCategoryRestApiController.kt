@@ -1,4 +1,4 @@
-package com.hiel.hielside.accountbook.apis.budgetcategory
+package com.hiel.hielside.accountbook.apis.assetcategory
 
 import com.hiel.hielside.common.domains.ApiResponse
 import com.hiel.hielside.common.domains.auth.UserDetailsImpl
@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/account-book/budget-categories")
+@RequestMapping("/account-book/asset-categories")
 @RestController
-class BudgetCategoryRestApiController(
-    private val budgetCategoryService: BudgetCategoryService,
+class AssetCategoryRestApiController(
+    private val assetCategoryService: AssetCategoryService,
 ) {
     @PostMapping("")
     fun register(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
-        @RequestBody request: RegisterBudgetCategoryRequest,
+        @RequestBody request: RegisterAssetCategoryRequest,
     ): ApiResponse<Unit> {
-        budgetCategoryService.register(
+        assetCategoryService.register(
             name = request.name,
             userId = userDetails.id,
         )
@@ -34,9 +34,9 @@ class BudgetCategoryRestApiController(
     fun update(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @PathVariable id: Long,
-        @RequestBody request: UpdateBudgetCategoryRequest,
+        @RequestBody request: UpdateAssetCategoryRequest,
     ): ApiResponse<Unit> {
-        budgetCategoryService.update(budgetCategoryId = id, name = request.name, userId = userDetails.id)
+        assetCategoryService.update(assetCategoryId = id, name = request.name, userId = userDetails.id)
         return ApiResponseFactory.success()
     }
 
@@ -45,16 +45,16 @@ class BudgetCategoryRestApiController(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @PathVariable id: Long,
     ): ApiResponse<Unit> {
-        budgetCategoryService.delete(budgetCategoryId = id, userId = userDetails.id)
+        assetCategoryService.delete(assetCategoryId = id, userId = userDetails.id)
         return ApiResponseFactory.success()
     }
 
     @GetMapping("")
     fun getAll(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
-    ): ApiResponse<GetAllBudgetCategoryResponse> {
+    ): ApiResponse<GetAllAssetCategoryResponse> {
         return ApiResponseFactory.success(
-            GetAllBudgetCategoryResponse.build(budgetCategoryService.getAll(userId = userDetails.id))
+            GetAllAssetCategoryResponse.build(assetCategoryService.getAll(userId = userDetails.id))
         )
     }
 }

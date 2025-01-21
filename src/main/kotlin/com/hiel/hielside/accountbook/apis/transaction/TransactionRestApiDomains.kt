@@ -1,7 +1,7 @@
 package com.hiel.hielside.accountbook.apis.transaction
 
 import com.hiel.hielside.accountbook.domains.IncomeExpenseType
-import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryEntity
+import com.hiel.hielside.accountbook.jpa.assetcategory.AssetCategoryEntity
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionEntity
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryEntity
 import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
@@ -17,7 +17,7 @@ data class RegisterTransactionRequest(
     val title: String,
     val price: Long,
     val isWaste: Boolean = false,
-    val budgetCategoryId: Long,
+    val assetCategoryId: Long,
     val transactionCategoryId: Long,
     val transactionDate: OffsetDateTime,
 ) {
@@ -29,7 +29,7 @@ data class RegisterTransactionRequest(
 
     fun build(
         user: AccountBookUserEntity,
-        budgetCategory: BudgetCategoryEntity,
+        assetCategory: AssetCategoryEntity,
         transactionCategory: TransactionCategoryEntity,
     ) = TransactionEntity(
         incomeExpenseType = incomeExpenseType,
@@ -37,7 +37,7 @@ data class RegisterTransactionRequest(
         price = price,
         isWaste = isWaste,
         user = user,
-        budgetCategory = budgetCategory,
+        assetCategory = assetCategory,
         transactionCategory = transactionCategory,
         transactionDatetime = transactionDate,
     )
@@ -48,7 +48,7 @@ data class UpdateTransactionRequest(
     val title: String,
     val price: Long,
     val isWaste: Boolean = false,
-    val budgetCategoryId: Long,
+    val assetCategoryId: Long,
     val transactionCategoryId: Long,
     val transactionDate: OffsetDateTime,
 ) {
@@ -64,8 +64,8 @@ data class GetTransactionDetailResponse(
     val date: String,
     val price: Long,
     val title: String,
-    val budgetCategoryId: Long,
-    val budgetCategoryName: String,
+    val assetCategoryId: Long,
+    val assetCategoryName: String,
     val transactionCategoryId: Long,
     val transactionCategoryName: String,
     val incomeExpenseType: IncomeExpenseType,
@@ -77,8 +77,8 @@ data class GetTransactionDetailResponse(
             date = transaction.transactionDatetime.toFormatString(),
             price = transaction.price,
             title = transaction.title,
-            budgetCategoryId = transaction.budgetCategory.id,
-            budgetCategoryName = transaction.budgetCategory.name,
+            assetCategoryId = transaction.assetCategory.id,
+            assetCategoryName = transaction.assetCategory.name,
             transactionCategoryId = transaction.transactionCategory.id,
             transactionCategoryName = transaction.transactionCategory.name,
             incomeExpenseType = transaction.incomeExpenseType,
@@ -96,8 +96,8 @@ data class GetAllTransactionResponse(
         val date: String,
         val price: Long,
         val title: String,
-        val budgetCategoryId: Long,
-        val budgetCategoryName: String,
+        val assetCategoryId: Long,
+        val assetCategoryName: String,
         val transactionCategoryId: Long,
         val transactionCategoryName: String,
         val incomeExpenseType: IncomeExpenseType,
@@ -109,8 +109,8 @@ data class GetAllTransactionResponse(
                 date = transaction.transactionDatetime.toFormatString(format = "yyyyMMdd"),
                 price = transaction.price,
                 title = transaction.title,
-                budgetCategoryId = transaction.budgetCategory.id,
-                budgetCategoryName = transaction.budgetCategory.name,
+                assetCategoryId = transaction.assetCategory.id,
+                assetCategoryName = transaction.assetCategory.name,
                 transactionCategoryId = transaction.transactionCategory.id,
                 transactionCategoryName = transaction.transactionCategory.name,
                 incomeExpenseType = transaction.incomeExpenseType,

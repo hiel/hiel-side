@@ -1,7 +1,7 @@
 package com.hiel.hielside.accountbook.jpa.transaction
 
 import com.hiel.hielside.accountbook.domains.IncomeExpenseType
-import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryEntity
+import com.hiel.hielside.accountbook.jpa.assetcategory.AssetCategoryEntity
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryEntity
 import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import com.hiel.hielside.common.jpa.DeleteBaseEntity
@@ -44,8 +44,8 @@ class TransactionEntity(
     val user: AccountBookUserEntity,
 
     @ManyToOne
-    @JoinColumn(name = "budget_category_id", nullable = false)
-    var budgetCategory: BudgetCategoryEntity,
+    @JoinColumn(name = "asset_category_id", nullable = false)
+    var assetCategory: AssetCategoryEntity,
 
     @ManyToOne
     @JoinColumn(name = "transaction_category_id", nullable = false)

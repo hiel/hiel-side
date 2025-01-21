@@ -1,8 +1,8 @@
 package com.hiel.hielside.accountbook.apis.developers
 
 import com.hiel.hielside.accountbook.domains.IncomeExpenseType
-import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryEntity
-import com.hiel.hielside.accountbook.jpa.budgetcategory.BudgetCategoryRepository
+import com.hiel.hielside.accountbook.jpa.assetcategory.AssetCategoryEntity
+import com.hiel.hielside.accountbook.jpa.assetcategory.AssetCategoryRepository
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionEntity
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionRepository
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryEntity
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class DeveloperRestApiController(
     private val userRepository: AccountBookUserRepository,
-    private val budgetCategoryRepository: BudgetCategoryRepository,
+    private val assetCategoryRepository: AssetCategoryRepository,
     private val transactionCategoryRepository: TransactionCategoryRepository,
     private val passwordEncoder: BCryptPasswordEncoder,
     private val transactionRepository: TransactionRepository,
@@ -32,7 +32,7 @@ class DeveloperRestApiController(
     @PostMapping("/migrate")
     fun migrate() {
         val userCount = 5
-        val budgetCategoryNames = listOf("국민은행", "현대카드", "비상금")
+        val assetCategoryNames = listOf("국민은행", "현대카드", "비상금")
         val transactionCategoryNames = listOf("식비", "커피", "모임")
         val transactionCount = 10
 
@@ -48,9 +48,9 @@ class DeveloperRestApiController(
             }
         )
 
-        val budgetCategoryEntities = budgetCategoryRepository.saveAll(
-            budgetCategoryNames.map {
-                BudgetCategoryEntity(
+        val assetCategoryEntities = assetCategoryRepository.saveAll(
+            assetCategoryNames.map {
+                AssetCategoryEntity(
                     name = it,
                     user = userEntities.first(),
                 )
@@ -81,7 +81,7 @@ class DeveloperRestApiController(
                     price = ((100..100000).random() / 10 * 10).toLong(),
                     isWaste = if (incomeExpenseType == IncomeExpenseType.INCOME) false else listOf(true, false).random(),
                     user = userEntities.first(),
-                    budgetCategory = budgetCategoryEntities.random(),
+                    assetCategory = assetCategoryEntities.random(),
                     transactionCategory = transactionCategoryEntities.random(),
                     transactionDatetime = datetime,
                 )

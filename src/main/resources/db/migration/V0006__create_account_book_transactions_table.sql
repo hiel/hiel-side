@@ -1,7 +1,7 @@
 CREATE TABLE account_book.transactions (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id BIGINT UNSIGNED NOT NULL COMMENT '사용자 아이디',
-    budget_category_id VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '예산 카테고리 아이디',
+    asset_category_id VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '자산 카테고리 아이디',
     income_expense_type VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '수입/지출 유형',
     transaction_category_id VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '내역 카테고리',
     transaction_datetime DATETIME NOT NULL comment '내역 일시',
@@ -31,7 +31,7 @@ CREATE TABLE account_book.transactions_aud (
     revtype TINYINT NOT NULL,
     id BIGINT UNSIGNED NOT NULL,
     user_id BIGINT UNSIGNED NOT NULL COMMENT '사용자 아이디',
-    budget_category_id VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '예산 카테고리 아이디',
+    asset_category_id VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '자산 카테고리 아이디',
     income_expense_type VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '수입/지출 유형',
     transaction_category_id VARCHAR(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '내역 카테고리',
     transaction_datetime DATETIME NOT NULL comment '내역 일시',
