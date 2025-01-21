@@ -33,6 +33,7 @@ class RequestResponseLoggingFilter : OncePerRequestFilter() {
                         "request" to mapOf(
                             "method" to reqWrapper.method,
                             "url" to reqWrapper.requestURL,
+                            "queryString" to reqWrapper.queryString,
                             "body" to String(reqWrapper.contentAsByteArray, Charsets.UTF_8),
                             "headers" to reqWrapper.headerNames.toList().associateWith { reqWrapper.getHeaders(it).toList() },
                             "time" to "${((endTime - startTime) / 1000.0)}s",

@@ -23,6 +23,9 @@ class TransactionCategoryEntity(
     @Column(name = "name", nullable = false, length = 20)
     var name: String,
 
+    @Column(name = "budget_price", nullable = true)
+    var budgetPrice: Long? = null,
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     val user: AccountBookUserEntity,

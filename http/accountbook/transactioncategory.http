@@ -3,8 +3,9 @@ POST {{host}}/account-book/transaction-categories
 Content-Type: application/json; charset=utf-8
 Authorization: Bearer {{access-token}}
 
+//    "budgetPrice": 100000,
 {
-    "name": "식비"
+    "name": "식비1"
 }
 
 

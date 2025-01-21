@@ -13,6 +13,7 @@ import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.domains.user.UserType
 import com.hiel.hielside.common.utilities.getNowKst
 import com.hiel.hielside.common.utilities.toFormatString
+import com.hiel.hielside.common.utilities.truncate
 import jakarta.transaction.Transactional
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
@@ -52,6 +53,7 @@ class DeveloperRestApiController(
             assetCategoryNames.map {
                 AssetCategoryEntity(
                     name = it,
+                    budgetPrice = listOf(((0..10000000).random()).truncate(3).toLong(), null).random(),
                     user = userEntities.first(),
                 )
             }
@@ -61,6 +63,7 @@ class DeveloperRestApiController(
             transactionCategoryNames.map {
                 TransactionCategoryEntity(
                     name = it,
+                    budgetPrice = listOf(((0..10000000).random()).truncate(3).toLong(), null).random(),
                     user = userEntities.first(),
                 )
             }
@@ -78,7 +81,7 @@ class DeveloperRestApiController(
                 TransactionEntity(
                     incomeExpenseType = incomeExpenseType,
                     title = "내역${datetime.toFormatString("yyMMdd")}",
-                    price = ((100..100000).random() / 10 * 10).toLong(),
+                    price = ((100..100000).random().truncate(2)).toLong(),
                     isWaste = if (incomeExpenseType == IncomeExpenseType.INCOME) false else listOf(true, false).random(),
                     user = userEntities.first(),
                     assetCategory = assetCategoryEntities.random(),

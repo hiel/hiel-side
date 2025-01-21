@@ -15,22 +15,23 @@ class AssetCategoryService(
     private val assetCategoryRepository: AssetCategoryRepository,
 ) {
     @Transactional
-    fun register(name: String, userId: Long) {
+    fun register(name: String, budgetPrice: Long?, userId: Long) {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         assetCategoryRepository.findFirstByNameAndUser(name = name, user = user)?.let {
             throw ServiceException(ResultCode.Common.EXIST_RESOURCE) }
-        assetCategoryRepository.save(AssetCategoryEntity(name = name, user = user))
+        assetCategoryRepository.save(AssetCategoryEntity(name = name, budgetPrice = budgetPrice, user = user))
     }
 
     @Transactional
-    fun update(assetCategoryId: Long, name: String, userId: Long) {
+    fun update(assetCategoryId: Long, name: String, budgetPrice: Long?, userId: Long) {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         val assetCategory = assetCategoryRepository.findFirstByIdAndUserAndIsDeleted(
             id = assetCategoryId, user = user, isDeleted = false)
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
         assetCategory.name = name
+        assetCategory.budgetPrice = budgetPrice
     }
 
     @Transactional

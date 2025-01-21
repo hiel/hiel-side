@@ -3,8 +3,9 @@ POST {{host}}/account-book/asset-categories
 Content-Type: application/json; charset=utf-8
 Authorization: Bearer {{access-token}}
 
+//    "budgetPrice": 100000,
 {
-    "name": "국민은행"
+    "name": "국민은행1"
 }
 
 

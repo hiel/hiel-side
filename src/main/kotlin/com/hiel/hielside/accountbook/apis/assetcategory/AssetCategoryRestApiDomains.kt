@@ -4,10 +4,12 @@ import com.hiel.hielside.accountbook.jpa.assetcategory.AssetCategoryEntity
 
 data class RegisterAssetCategoryRequest(
     val name: String,
+    val budgetPrice: Long? = null,
 )
 
 data class UpdateAssetCategoryRequest(
     val name: String,
+    val budgetPrice: Long? = null,
 )
 
 data class GetAllAssetCategoryResponse(
@@ -16,11 +18,13 @@ data class GetAllAssetCategoryResponse(
     data class GetAllAssetCategoryDetail(
         val id: Long,
         val name: String,
+        val budgetPrice: Long?,
     ) {
         companion object {
             fun build(assetCategory: AssetCategoryEntity) = GetAllAssetCategoryDetail(
                 id = assetCategory.id,
                 name = assetCategory.name,
+                budgetPrice = assetCategory.budgetPrice,
             )
         }
     }

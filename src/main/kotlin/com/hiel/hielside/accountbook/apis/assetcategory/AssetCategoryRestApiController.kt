@@ -23,10 +23,7 @@ class AssetCategoryRestApiController(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @RequestBody request: RegisterAssetCategoryRequest,
     ): ApiResponse<Unit> {
-        assetCategoryService.register(
-            name = request.name,
-            userId = userDetails.id,
-        )
+        assetCategoryService.register(name = request.name, budgetPrice = request.budgetPrice, userId = userDetails.id)
         return ApiResponseFactory.success()
     }
 
@@ -36,7 +33,7 @@ class AssetCategoryRestApiController(
         @PathVariable id: Long,
         @RequestBody request: UpdateAssetCategoryRequest,
     ): ApiResponse<Unit> {
-        assetCategoryService.update(assetCategoryId = id, name = request.name, userId = userDetails.id)
+        assetCategoryService.update(assetCategoryId = id, name = request.name, budgetPrice = request.budgetPrice, userId = userDetails.id)
         return ApiResponseFactory.success()
     }
 

@@ -23,10 +23,7 @@ class TransactionCategoryRestApiController(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @RequestBody request: RegisterTransactionCategoryRequest,
     ): ApiResponse<Unit> {
-        transactionCategoryService.register(
-            name = request.name,
-            userId = userDetails.id,
-        )
+        transactionCategoryService.register(name = request.name, budgetPrice = request.budgetPrice, userId = userDetails.id)
         return ApiResponseFactory.success()
     }
 
@@ -36,7 +33,8 @@ class TransactionCategoryRestApiController(
         @PathVariable id: Long,
         @RequestBody request: UpdateTransactionCategoryRequest,
     ): ApiResponse<Unit> {
-        transactionCategoryService.update(transactionCategoryId = id, name = request.name, userId = userDetails.id)
+        transactionCategoryService.update(
+            transactionCategoryId = id, name = request.name, budgetPrice = request.budgetPrice, userId = userDetails.id)
         return ApiResponseFactory.success()
     }
 

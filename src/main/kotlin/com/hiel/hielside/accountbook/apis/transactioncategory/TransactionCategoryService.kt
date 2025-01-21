@@ -15,22 +15,23 @@ class TransactionCategoryService(
     private val transactionCategoryRepository: TransactionCategoryRepository,
 ) {
     @Transactional
-    fun register(name: String, userId: Long) {
+    fun register(name: String, budgetPrice: Long?, userId: Long) {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         transactionCategoryRepository.findFirstByNameAndUser(name = name, user = user)?.let {
             throw ServiceException(ResultCode.Common.EXIST_RESOURCE) }
-        transactionCategoryRepository.save(TransactionCategoryEntity(name = name, user = user))
+        transactionCategoryRepository.save(TransactionCategoryEntity(name = name, budgetPrice = budgetPrice, user = user))
     }
 
     @Transactional
-    fun update(transactionCategoryId: Long, name: String, userId: Long) {
+    fun update(transactionCategoryId: Long, name: String, budgetPrice: Long?, userId: Long) {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         val transactionCategory = transactionCategoryRepository.findFirstByIdAndUserAndIsDeleted(
             id = transactionCategoryId, user = user, isDeleted = false)
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
         transactionCategory.name = name
+        transactionCategory.budgetPrice = budgetPrice
     }
 
     @Transactional
