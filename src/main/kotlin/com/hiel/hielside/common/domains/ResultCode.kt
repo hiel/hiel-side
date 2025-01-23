@@ -40,6 +40,13 @@ interface ResultCode {
         override fun getMessage(vararg args: Any) = message?.let { String.format(it, *args) }
     }
 
+    enum class User(private val message: String? = null) : ResultCode {
+        INVALID_TRANSACTION_START_DAY("잘못된 내역 시작일입니다."),
+        ;
+
+        override fun getMessage(vararg args: Any) = message?.let { String.format(it, *args) }
+    }
+
     enum class Transaction(private val message: String? = null) : ResultCode {
         INCOME_INVALID_IS_WASTE("수입 내역은 낭비로 등록할 수 없습니다."),
         ;

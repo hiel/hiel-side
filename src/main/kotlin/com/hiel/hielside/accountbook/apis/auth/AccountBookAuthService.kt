@@ -39,12 +39,7 @@ class AccountBookAuthService(
     private val webClientUrl: String,
 ) {
     @Transactional
-    fun signup(
-        email: String,
-        password: String,
-        name: String,
-        userType: UserType,
-    ) {
+    fun signup(email: String, password: String, name: String, userType: UserType) {
         userRepository.findFirstByEmail(email)?.let {
             if (it.userStatus == UserStatus.NOT_CERTIFICATED) {
                 sendSignupCertificateMail(email = email, user = it)
@@ -55,7 +50,7 @@ class AccountBookAuthService(
         }
 
         val user = userRepository.save(
-            AccountBookUserEntity(
+            AccountBookUserEntity.build(
                 email = email,
                 encryptPassword = password,
                 name = name,
@@ -92,10 +87,7 @@ class AccountBookAuthService(
         signupTokenRedisRepository.delete(signupTokenRedis)
     }
 
-    fun login(
-        email: String,
-        password: String,
-    ): AccountBookIssueTokenResponse {
+    fun login(email: String, password: String): AccountBookIssueTokenResponse {
         val user = userRepository.findFirstByEmailAndUserStatus(
             email = email,
             userStatus = UserStatus.AVAILABLE,
@@ -133,9 +125,7 @@ class AccountBookAuthService(
         }
     }
 
-    fun requestPasswordReset(
-        email: String,
-    ) {
+    fun requestPasswordReset(email: String) {
         val user = userRepository.findFirstByEmailAndUserStatus(email = email, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
 

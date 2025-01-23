@@ -8,6 +8,7 @@ import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.SliceResponseData
 import com.hiel.hielside.common.exceptions.ServiceException
+import com.hiel.hielside.common.utilities.DateTimeFormat
 import com.hiel.hielside.common.utilities.toFormatString
 import org.springframework.data.domain.Slice
 import java.time.OffsetDateTime
@@ -66,8 +67,10 @@ data class GetTransactionDetailResponse(
     val title: String,
     val assetCategoryId: Long,
     val assetCategoryName: String,
+    val assetCategoryBudgetPrice: Long?,
     val transactionCategoryId: Long,
     val transactionCategoryName: String,
+    val transactionCategoryBudgetPrice: Long?,
     val incomeExpenseType: IncomeExpenseType,
     val isWaste: Boolean,
 ) {
@@ -79,8 +82,10 @@ data class GetTransactionDetailResponse(
             title = transaction.title,
             assetCategoryId = transaction.assetCategory.id,
             assetCategoryName = transaction.assetCategory.name,
+            assetCategoryBudgetPrice = transaction.assetCategory.budgetPrice,
             transactionCategoryId = transaction.transactionCategory.id,
             transactionCategoryName = transaction.transactionCategory.name,
+            transactionCategoryBudgetPrice = transaction.transactionCategory.budgetPrice,
             incomeExpenseType = transaction.incomeExpenseType,
             isWaste = transaction.isWaste,
         )
@@ -89,7 +94,8 @@ data class GetTransactionDetailResponse(
 
 data class GetAllTransactionResponse(
     val slice: SliceResponseData<GetAllTransactionResponseDetail>,
-    val transactionDatetime: OffsetDateTime,
+    val transactionMonthlyRange: List<OffsetDateTime>,
+    val transactionStartDay: Int,
 ) {
     data class GetAllTransactionResponseDetail(
         val id: Long,
@@ -106,7 +112,7 @@ data class GetAllTransactionResponse(
         companion object {
             fun build(transaction: TransactionEntity) = GetAllTransactionResponseDetail(
                 id = transaction.id,
-                date = transaction.transactionDatetime.toFormatString(format = "yyyyMMdd"),
+                date = transaction.transactionDatetime.toFormatString(format = DateTimeFormat.DATE),
                 price = transaction.price,
                 title = transaction.title,
                 assetCategoryId = transaction.assetCategory.id,
@@ -120,13 +126,16 @@ data class GetAllTransactionResponse(
     }
 
     companion object {
-        fun build(slice: Slice<TransactionEntity>, transactionDatetime: OffsetDateTime): GetAllTransactionResponse {
+        fun build(
+            slice: Slice<TransactionEntity>, user: AccountBookUserEntity, transactionDatetime: OffsetDateTime,
+        ): GetAllTransactionResponse {
             return GetAllTransactionResponse(
                 slice = SliceResponseData.build(
                     slice = slice,
                     content = slice.content.map { GetAllTransactionResponseDetail.build(it) },
                 ),
-                transactionDatetime = transactionDatetime,
+                transactionMonthlyRange = user.getTransactionMonthlyRange(transactionDatetime).toList(),
+                transactionStartDay = user.transactionStartDay,
             )
         }
     }

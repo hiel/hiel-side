@@ -3,8 +3,9 @@ package com.hiel.hielside.accountbook.apis.transaction
 import com.hiel.hielside.common.domains.ApiResponse
 import com.hiel.hielside.common.domains.auth.UserDetailsImpl
 import com.hiel.hielside.common.utilities.ApiResponseFactory
+import com.hiel.hielside.common.utilities.DateTimeFormat
 import com.hiel.hielside.common.utilities.getNowKst
-import com.hiel.hielside.common.utilities.initializeTime
+import com.hiel.hielside.common.utilities.toOffsetDateTime
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.time.OffsetDateTime
 
 @RequestMapping("/account-book/transactions")
 @RestController
@@ -66,22 +66,15 @@ class TransactionRestApiController(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @RequestParam("page") page: Int,
         @RequestParam("pageSize") pageSize: Int,
-        @RequestParam("transactionDateTime") transactionDateTime: OffsetDateTime? = null,
+        @RequestParam("date") date: String? = null,
     ): ApiResponse<GetAllTransactionResponse> {
-        val datetime = (transactionDateTime ?: getNowKst()).initializeTime()
         return ApiResponseFactory.success(
-            GetAllTransactionResponse.build(
-                slice = transactionService.getSlice(
-                    transactionDatetime = datetime,
-                    page = page,
-                    pageSize = pageSize,
-                    userId = userDetails.id,
-                ),
-                transactionDatetime = datetime,
-            )
+            transactionService.getSlice(
+                datetime = date?.toOffsetDateTime(DateTimeFormat.DATE_BAR) ?: getNowKst(),
+                page = page,
+                pageSize = pageSize,
+                userId = userDetails.id,
+            ),
         )
     }
-
-    // TODO: update
-    // TODO: delete
 }

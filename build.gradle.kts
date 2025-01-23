@@ -20,6 +20,7 @@ plugins {
 }
 
 dependencies {
+    val kotestVersion = "6.0.0.M1"
     // kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -29,6 +30,12 @@ dependencies {
     // spring
     implementation("org.springframework.boot:spring-boot-starter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // test
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest:kotest-property:${kotestVersion}")
+    testImplementation("io.mockk:mockk:1.13.16")
 
     // web
     implementation("org.springframework.boot:spring-boot-starter-web")

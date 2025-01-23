@@ -8,14 +8,13 @@ import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
-import com.hiel.hielside.common.utilities.convertToFirstDayOfMonth
-import com.hiel.hielside.common.utilities.convertToLastDayOfMonth
 import com.hiel.hielside.common.utilities.pageOf
-import org.springframework.data.domain.Slice
+import io.lettuce.core.BitFieldArgs.Offset
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
+import java.util.Date
 
 @Service
 class TransactionService(
@@ -78,19 +77,27 @@ class TransactionService(
     }
 
     fun getSlice(
-        transactionDatetime: OffsetDateTime,
+        datetime: OffsetDateTime,
         page: Int,
         pageSize: Int,
         userId: Long,
-    ): Slice<TransactionEntity> {
+    ): GetAllTransactionResponse {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
-        return transactionRepository.findAllByTransactionDatetimeBetweenAndUserAndIsDeletedOrderByTransactionDatetimeDesc(
-            transactionDatetimeStart = transactionDatetime.convertToFirstDayOfMonth(),
-            transactionDatetimeEnd = transactionDatetime.convertToLastDayOfMonth(),
+
+        val monthlyRange = user.getTransactionMonthlyRange(datetime)
+        val transactions = transactionRepository.findAllByTransactionDatetimeBetweenAndUserAndIsDeletedOrderByTransactionDatetimeDesc(
+            transactionDatetimeStart = monthlyRange.first,
+            transactionDatetimeEnd = monthlyRange.second,
             user = user,
             isDeleted = false,
             pageable = pageOf(page, pageSize),
+        )
+
+        return GetAllTransactionResponse.build(
+            slice = transactions,
+            transactionDatetime = datetime,
+            user = user,
         )
     }
 }

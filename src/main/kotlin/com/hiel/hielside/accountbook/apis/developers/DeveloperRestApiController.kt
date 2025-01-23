@@ -11,6 +11,9 @@ import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.domains.user.UserType
+import com.hiel.hielside.common.utilities.DateTimeFormat
+import com.hiel.hielside.common.utilities.FIRST_DAY_OF_MONTH
+import com.hiel.hielside.common.utilities.LAST_DAY_OF_MONTH
 import com.hiel.hielside.common.utilities.getNowKst
 import com.hiel.hielside.common.utilities.toFormatString
 import com.hiel.hielside.common.utilities.truncate
@@ -39,12 +42,13 @@ class DeveloperRestApiController(
 
         val userEntities = userRepository.saveAll(
             (1..userCount).map {
-                AccountBookUserEntity(
+                AccountBookUserEntity.build(
                     email = "yangjunghooon$it@gmail.com",
                     encryptPassword = passwordEncoder.encode("yangjunghooon"),
                     name = "yangjunghooon$it",
                     userType = UserType.MASTER,
                     userStatus = UserStatus.AVAILABLE,
+                    transactionStartDay = (FIRST_DAY_OF_MONTH..LAST_DAY_OF_MONTH).random(),
                 )
             }
         )
@@ -69,7 +73,7 @@ class DeveloperRestApiController(
             }
         )
 
-        (1..transactionCount).forEach {
+        (1..transactionCount).forEach { _ ->
             val datetime = getNowKst()
                 .plusMonths((-2..2).random().toLong())
                 .withDayOfMonth((1..28).random())
@@ -80,7 +84,7 @@ class DeveloperRestApiController(
             transactionRepository.save(
                 TransactionEntity(
                     incomeExpenseType = incomeExpenseType,
-                    title = "내역${datetime.toFormatString("yyMMdd")}",
+                    title = "내역${datetime.toFormatString(DateTimeFormat.DATE_SHORT_YEAR)}",
                     price = ((100..100000).random().truncate(2)).toLong(),
                     isWaste = if (incomeExpenseType == IncomeExpenseType.INCOME) false else listOf(true, false).random(),
                     user = userEntities.first(),
