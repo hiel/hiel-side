@@ -46,6 +46,6 @@ Authorization: Bearer {{access-token}}
 GET {{host}}/account-book/transactions
     ?page=1
     &pageSize=20
-#    &transactionYearMonth=2024-12-01T00:00:00.000+09:00
+#    &date=2024-12-01
 Content-Type: application/json; charset=utf-8
 Authorization: Bearer {{access-token}}

@@ -27,4 +27,14 @@ class AccountBookUserRestApiController(
         )
         return ApiResponseFactory.success()
     }
+
+    @PutMapping("/transaction-start-day")
+    fun updateTransactionStartDay(
+        @AuthenticationPrincipal userDetails: UserDetailsImpl,
+        @RequestBody request: UpdateTransactionStartDayRequest,
+    ): ApiResponse<UpdateTransactionStartDayResponse> {
+        request.validate()
+        return ApiResponseFactory.success(UpdateTransactionStartDayResponse(
+            userService.updateTransactionStartDay(startDay = request.transactionStartDay, userId = userDetails.id)))
+    }
 }

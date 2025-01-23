@@ -7,3 +7,12 @@ Authorization: Bearer {{access-token}}
     "currentPassword": "yangjunghooon",
     "updatePassword": "yangjunghooon"
 }
+
+### 내역 시작일 변경
+PUT {{host}}/account-book/users/transaction-start-day
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{access-token}}
+
+{
+    "transactionStartDay": 15
+}

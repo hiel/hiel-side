@@ -22,4 +22,12 @@ class AccountBookUserService(
         }
         user.encryptPassword = passwordEncoder.encode(updatePassword)
     }
+
+    @Transactional
+    fun updateTransactionStartDay(startDay: Int, userId: Long): Int {
+        val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
+            ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+        user.transactionStartDay = startDay
+        return user.transactionStartDay
+    }
 }
