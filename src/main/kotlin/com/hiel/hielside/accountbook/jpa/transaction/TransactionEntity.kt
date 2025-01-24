@@ -53,4 +53,6 @@ class TransactionEntity(
 
     @Column(name = "transaction_datetime", nullable = false)
     var transactionDatetime: OffsetDateTime
-) : DeleteBaseEntity()
+) : DeleteBaseEntity() {
+    fun getSignedPrice() = if (incomeExpenseType == IncomeExpenseType.INCOME) price else -price
+}

@@ -7,5 +7,6 @@ interface TransactionCategoryRepository : JpaRepository<TransactionCategoryEntit
     fun findFirstByIdAndUser(id: Long, user: AccountBookUserEntity): TransactionCategoryEntity?
     fun findFirstByIdAndUserAndIsDeleted(id: Long, user: AccountBookUserEntity, isDeleted: Boolean): TransactionCategoryEntity?
     fun findFirstByNameAndUser(name: String, user: AccountBookUserEntity): TransactionCategoryEntity?
+    fun findAllByUser(user: AccountBookUserEntity): List<TransactionCategoryEntity>
     fun findAllByUserAndIsDeleted(user: AccountBookUserEntity, isDeleted: Boolean): List<TransactionCategoryEntity>
 }

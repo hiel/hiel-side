@@ -7,6 +7,7 @@ interface AssetCategoryRepository : JpaRepository<AssetCategoryEntity, Long> {
     fun findFirstByIdAndUser(id: Long, user: AccountBookUserEntity): AssetCategoryEntity?
     fun findFirstByIdAndUserAndIsDeleted(id: Long, user: AccountBookUserEntity, isDeleted: Boolean): AssetCategoryEntity?
     fun findFirstByNameAndUser(name: String, user: AccountBookUserEntity): AssetCategoryEntity?
+    fun findAllByUser(user: AccountBookUserEntity): List<AssetCategoryEntity>
     fun findAllByUserAndIsDeleted(user: AccountBookUserEntity, isDeleted: Boolean): List<AssetCategoryEntity>
 
 }

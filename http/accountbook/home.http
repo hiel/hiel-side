@@ -1,0 +1,4 @@
+### 홈 조회
+GET {{host}}/account-book/home
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{access-token}}

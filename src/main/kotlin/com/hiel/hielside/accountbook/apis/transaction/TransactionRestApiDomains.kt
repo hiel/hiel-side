@@ -95,7 +95,6 @@ data class GetTransactionDetailResponse(
 data class GetAllTransactionResponse(
     val slice: SliceResponseData<GetAllTransactionResponseDetail>,
     val transactionMonthlyRange: List<OffsetDateTime>,
-    val transactionStartDay: Int,
 ) {
     data class GetAllTransactionResponseDetail(
         val id: Long,
@@ -135,7 +134,6 @@ data class GetAllTransactionResponse(
                     content = slice.content.map { GetAllTransactionResponseDetail.build(it) },
                 ),
                 transactionMonthlyRange = user.getTransactionMonthlyRange(transactionDatetime).toList(),
-                transactionStartDay = user.transactionStartDay,
             )
         }
     }
