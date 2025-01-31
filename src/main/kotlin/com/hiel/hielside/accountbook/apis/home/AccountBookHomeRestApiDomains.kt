@@ -23,10 +23,6 @@ data class GetHomeResponse(
     data class TransactionCategoryDetail(
         val id: Long,
         val name: String,
-        val budget: Long?,
         val totalExpense: Long,
-        val balance: Long?,
-        val availableExpensePricePerDay: Long?,
-        val isFine: Boolean?,
     )
 }

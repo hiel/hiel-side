@@ -95,7 +95,7 @@ class AccountBookUserEntity(
             start.withDayOfMonth(if (start.getLastDayOfMonth() <= transactionStartDay) start.getLastDayOfMonth() else transactionStartDay)
         to
             end.withDayOfMonth(
-                (if (end.getLastDayOfMonth() <= transactionStartDay) end.getLastDayOfMonth() else transactionStartDay) - 1)
+                (if (end.getLastDayOfMonth() <= transactionStartDay) end.getLastDayOfMonth() else transactionStartDay)).minusDays(1)
         )
     }
 

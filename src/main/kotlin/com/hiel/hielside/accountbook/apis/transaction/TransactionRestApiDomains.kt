@@ -23,6 +23,9 @@ data class RegisterTransactionRequest(
     val transactionDate: OffsetDateTime,
 ) {
     fun validate() {
+        if (price <= 0) {
+            throw ServiceException(ResultCode.Transaction.INVALID_PRICE)
+        }
         if (incomeExpenseType == IncomeExpenseType.INCOME && isWaste) {
             throw ServiceException(ResultCode.Transaction.INCOME_INVALID_IS_WASTE)
         }
@@ -54,6 +57,9 @@ data class UpdateTransactionRequest(
     val transactionDate: OffsetDateTime,
 ) {
     fun validate() {
+        if (price <= 0) {
+            throw ServiceException(ResultCode.Transaction.INVALID_PRICE)
+        }
         if (incomeExpenseType == IncomeExpenseType.INCOME && isWaste) {
             throw ServiceException(ResultCode.Transaction.INCOME_INVALID_IS_WASTE)
         }
@@ -70,7 +76,6 @@ data class GetTransactionDetailResponse(
     val assetCategoryBudgetPrice: Long?,
     val transactionCategoryId: Long,
     val transactionCategoryName: String,
-    val transactionCategoryBudgetPrice: Long?,
     val incomeExpenseType: IncomeExpenseType,
     val isWaste: Boolean,
 ) {
@@ -85,7 +90,6 @@ data class GetTransactionDetailResponse(
             assetCategoryBudgetPrice = transaction.assetCategory.budgetPrice,
             transactionCategoryId = transaction.transactionCategory.id,
             transactionCategoryName = transaction.transactionCategory.name,
-            transactionCategoryBudgetPrice = transaction.transactionCategory.budgetPrice,
             incomeExpenseType = transaction.incomeExpenseType,
             isWaste = transaction.isWaste,
         )

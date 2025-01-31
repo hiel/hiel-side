@@ -21,7 +21,7 @@ import io.mockk.spyk
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-class AccountBookServiceTest : FunSpec ({
+class AccountBookHomeServiceTest : FunSpec ({
     val userRepository = mockk<AccountBookUserRepository>()
     val assetCategoryRepository = mockk<AssetCategoryRepository>()
     val transactionCategoryRepository = mockk<TransactionCategoryRepository>()
@@ -53,8 +53,8 @@ class AccountBookServiceTest : FunSpec ({
                 AssetCategoryEntity(id = 3, name = "TEST_ASSET_CATEGORY-3", budgetPrice = 5000, user = user),
             )
             val transactionCategories = listOf(
-                TransactionCategoryEntity(id = 1, name = "TEST_TRANSACTION_CATEGORY-1", budgetPrice = 100000, user = user),
-                TransactionCategoryEntity(id = 2, name = "TEST_TRANSACTION_CATEGORY-2", budgetPrice = 26000, user = user),
+                TransactionCategoryEntity(id = 1, name = "TEST_TRANSACTION_CATEGORY-1", user = user),
+                TransactionCategoryEntity(id = 2, name = "TEST_TRANSACTION_CATEGORY-2", user = user),
                 TransactionCategoryEntity(id = 3, name = "TEST_TRANSACTION_CATEGORY-3", user = user),
             )
             val transactions = listOf(
@@ -80,6 +80,17 @@ class AccountBookServiceTest : FunSpec ({
                     transactionCategory = transactionCategories[2],
                     transactionDatetime = OffsetDateTime.of(2025, 2, 8, 0, 0, 0, 0, ZoneOffset.UTC),
                 ),
+                TransactionEntity(
+                    id = 1,
+                    incomeExpenseType = IncomeExpenseType.INCOME,
+                    title = "TEST_TITLE",
+                    price = 1000,
+                    isWaste = false,
+                    user = user,
+                    assetCategory = assetCategories[0],
+                    transactionCategory = transactionCategories[1],
+                    transactionDatetime = OffsetDateTime.of(2025, 2, 8, 0, 0, 0, 0, ZoneOffset.UTC),
+                ),
             )
 
             every { getNowKst() } returns
@@ -97,8 +108,9 @@ class AccountBookServiceTest : FunSpec ({
 
             val result = service.getHome(userId = 1)
 
-            var budget = 100000 + 10000 + 5000 + 100000 + 26000
+            var totalIncome = 1000
             var totalExpense = 20000 + 1000
+            var budget = (100000 + 10000 + 5000) + totalIncome
             var balance = budget - totalExpense
             var availableExpensePricePerDay = balance / 20
             result.budget shouldBe budget
@@ -109,8 +121,9 @@ class AccountBookServiceTest : FunSpec ({
 
             result.assetCategories.size shouldBe 3
 
-            budget = 100000
+            totalIncome = 1000
             totalExpense = 20000
+            budget = 100000 + totalIncome
             balance = budget - totalExpense
             availableExpensePricePerDay = balance / 20
             result.assetCategories[0].budget shouldBe budget
@@ -123,22 +136,7 @@ class AccountBookServiceTest : FunSpec ({
             result.assetCategories[1].isFine shouldBe true
 
             result.transactionCategories.size shouldBe 3
-
-            budget = 26000
-            totalExpense = 20000
-            balance = budget - totalExpense
-            availableExpensePricePerDay = balance / 20
-            result.transactionCategories[1].budget shouldBe budget
-            result.transactionCategories[1].totalExpense shouldBe totalExpense
-            result.transactionCategories[1].balance shouldBe balance
-            result.transactionCategories[1].availableExpensePricePerDay shouldBe availableExpensePricePerDay
-            result.transactionCategories[1].isFine shouldBe ((budget / 28) <= availableExpensePricePerDay)
-
-            result.transactionCategories[2].budget shouldBe null
-            result.transactionCategories[2].totalExpense shouldBe 1000
-            result.transactionCategories[2].balance shouldBe null
-            result.transactionCategories[2].availableExpensePricePerDay shouldBe null
-            result.transactionCategories[2].isFine shouldBe null
+            result.transactionCategories[1].totalExpense shouldBe 20000
 
             result.wastedPrice shouldBe 0
         }

@@ -67,7 +67,6 @@ class DeveloperRestApiController(
             transactionCategoryNames.map {
                 TransactionCategoryEntity(
                     name = it,
-                    budgetPrice = listOf(((0..10000000).random()).truncate(3).toLong(), null).random(),
                     user = userEntities.first(),
                 )
             }
