@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 class TransactionCategoryRestApiController(
     private val transactionCategoryService: TransactionCategoryService,
 ) {
-    @PostMapping("")
+    @PostMapping
     fun register(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @RequestBody request: RegisterTransactionCategoryRequest,
@@ -47,7 +47,7 @@ class TransactionCategoryRestApiController(
         return ApiResponseFactory.success()
     }
 
-    @GetMapping("")
+    @GetMapping
     fun getAll(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
     ): ApiResponse<GetAllTransactionCategoryResponse> {

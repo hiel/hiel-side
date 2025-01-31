@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 class AssetCategoryRestApiController(
     private val assetCategoryService: AssetCategoryService,
 ) {
-    @PostMapping("")
+    @PostMapping
     fun register(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @RequestBody request: RegisterAssetCategoryRequest,
@@ -46,7 +46,7 @@ class AssetCategoryRestApiController(
         return ApiResponseFactory.success()
     }
 
-    @GetMapping("")
+    @GetMapping
     fun getAll(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
     ): ApiResponse<GetAllAssetCategoryResponse> {

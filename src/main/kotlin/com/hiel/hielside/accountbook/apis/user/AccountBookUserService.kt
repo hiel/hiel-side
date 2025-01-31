@@ -30,4 +30,10 @@ class AccountBookUserService(
         user.transactionStartDay = startDay
         return user.transactionStartDay
     }
+
+    fun getUser(userId: Long): GetUserResponse {
+        val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
+            ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
+        return GetUserResponse.build(user)
+    }
 }

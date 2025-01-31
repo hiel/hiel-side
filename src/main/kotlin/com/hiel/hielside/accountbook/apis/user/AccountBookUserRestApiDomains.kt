@@ -34,3 +34,13 @@ data class UpdateTransactionStartDayRequest(
 data class UpdateTransactionStartDayResponse(
     val transactionStartDay: Int,
 )
+
+data class GetUserResponse(
+    val transactionStartDay: Int,
+) {
+    companion object {
+        fun build(user: AccountBookUserEntity) = GetUserResponse(
+            transactionStartDay = user.transactionStartDay,
+        )
+    }
+}

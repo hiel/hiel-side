@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class TransactionRestApiController(
     private val transactionService: TransactionService,
 ) {
-    @PostMapping("")
+    @PostMapping
     fun register(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @RequestBody request: RegisterTransactionRequest,
@@ -61,7 +61,7 @@ class TransactionRestApiController(
             GetTransactionDetailResponse.build(transactionService.getDetail(transactionId = id, userId = userDetails.id)))
     }
 
-    @GetMapping("")
+    @GetMapping
     fun getSlice(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @RequestParam("page") page: Int,
