@@ -18,34 +18,40 @@ class AssetCategoryService(
     fun register(name: String, budgetPrice: Long?, userId: Long) {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
-        assetCategoryRepository.findFirstByNameAndUser(name = name, user = user)?.let {
-            throw ServiceException(ResultCode.Common.EXIST_RESOURCE) }
-        assetCategoryRepository.save(AssetCategoryEntity(name = name, budgetPrice = budgetPrice, user = user))
+        val category = assetCategoryRepository.findFirstByNameAndUser(name = name, user = user)
+        if (category == null) {
+            assetCategoryRepository.save(AssetCategoryEntity(name = name, budgetPrice = budgetPrice, user = user))
+        } else if (!category.isActive) {
+            category.isActive = true
+            category.budgetPrice = budgetPrice
+        } else {
+            throw ServiceException(ResultCode.Common.EXIST_RESOURCE)
+        }
     }
 
     @Transactional
     fun update(assetCategoryId: Long, name: String, budgetPrice: Long?, userId: Long) {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
-        val assetCategory = assetCategoryRepository.findFirstByIdAndUserAndIsDeleted(
-            id = assetCategoryId, user = user, isDeleted = false)
+        val assetCategory = assetCategoryRepository.findFirstByIdAndUserAndIsActive(
+            id = assetCategoryId, user = user, isActive = true)
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
         assetCategory.name = name
         assetCategory.budgetPrice = budgetPrice
     }
 
     @Transactional
-    fun delete(assetCategoryId: Long, userId: Long) {
+    fun deactivate(assetCategoryId: Long, userId: Long) {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         val assetCategory = assetCategoryRepository.findFirstByIdAndUser(id = assetCategoryId, user = user)
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
-        assetCategory.delete(userId)
+        assetCategory.isActive = false
     }
 
     fun getAll(userId: Long): List<AssetCategoryEntity> {
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
-        return assetCategoryRepository.findAllByUserAndIsDeleted(user = user, isDeleted = false)
+        return assetCategoryRepository.findAllByUserAndIsActive(user = user, isActive = true)
     }
 }

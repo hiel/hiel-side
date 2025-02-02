@@ -20,7 +20,7 @@ Authorization: Bearer {{access-token}}
 
 
 ### 내역 카테고리 삭제
-DELETE {{host}}/account-book/transaction-categories/1
+PUT {{host}}/account-book/transaction-categories/1/deactivate
 Content-Type: application/json; charset=utf-8
 Authorization: Bearer {{access-token}}
 

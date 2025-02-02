@@ -4,7 +4,6 @@ import com.hiel.hielside.common.domains.ApiResponse
 import com.hiel.hielside.common.domains.auth.UserDetailsImpl
 import com.hiel.hielside.common.utilities.ApiResponseFactory
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -38,12 +37,12 @@ class TransactionCategoryRestApiController(
         return ApiResponseFactory.success()
     }
 
-    @DeleteMapping("/{id}")
-    fun delete(
+    @PutMapping("/{id}/deactivate")
+    fun deactivate(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
         @PathVariable id: Long,
     ): ApiResponse<Unit> {
-        transactionCategoryService.delete(transactionCategoryId = id, userId = userDetails.id)
+        transactionCategoryService.deactivate(transactionCategoryId = id, userId = userDetails.id)
         return ApiResponseFactory.success()
     }
 
