@@ -6,6 +6,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
+import java.time.temporal.TemporalUnit
 import java.util.Date
 
 private val ZONE_ID = ZoneId.of("Asia/Seoul")
@@ -55,3 +56,6 @@ fun Long.minuteToSecond() = this * SECOND_PER_MINUTE
 fun getNowKst(): OffsetDateTime = ZonedDateTime.now(ZONE_ID).toOffsetDateTime()
 
 fun OffsetDateTime.getLastDayOfMonth() = this.with(TemporalAdjusters.lastDayOfMonth()).dayOfMonth
+
+fun OffsetDateTime.untilInitializeTime(endExclusive: OffsetDateTime, unit: TemporalUnit)
+    = this.initializeTime().until(endExclusive.initializeTime(), unit)

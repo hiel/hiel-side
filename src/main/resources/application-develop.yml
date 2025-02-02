@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: develop
+cloud:
+  aws:
+    cloudwatch:
+      group-name: /aws/ec2/instance/hiel-side-develop/log
+      stream-prefix: hiel-side-develop-
+    s3:
+      bucket: hiel-side-develop
+allow-origin-urls: http://localhost:3000
+web-client-url: http://localhost:3000

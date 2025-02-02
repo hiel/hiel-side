@@ -1,7 +1,10 @@
 package com.hiel.hielside.accountbook.apis.home
 
+import com.hiel.hielside.accountbook.domains.Range
+import java.time.OffsetDateTime
+
 data class GetHomeResponse(
-    val budget: Long?,
+    val transactionMonthlyRange: Range<OffsetDateTime>,
     val totalExpense: Long,
     val balance: Long?,
     val availableExpensePricePerDay: Long?,

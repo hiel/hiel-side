@@ -13,7 +13,6 @@ on:
       - "!.editorconfig"
       - "!README.md"
       - "!.run/**"
-      - "scripts/**"
 
 jobs:
   build:

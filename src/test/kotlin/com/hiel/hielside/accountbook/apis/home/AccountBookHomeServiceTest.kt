@@ -113,7 +113,6 @@ class AccountBookHomeServiceTest : FunSpec ({
             var budget = (100000 + 10000 + 5000) + totalIncome
             var balance = budget - totalExpense
             var availableExpensePricePerDay = balance / 20
-            result.budget shouldBe budget
             result.totalExpense shouldBe totalExpense
             result.balance shouldBe balance
             result.availableExpensePricePerDay shouldBe availableExpensePricePerDay

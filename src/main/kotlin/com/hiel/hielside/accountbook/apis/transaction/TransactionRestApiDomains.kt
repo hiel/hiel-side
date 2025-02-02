@@ -1,6 +1,8 @@
 package com.hiel.hielside.accountbook.apis.transaction
 
 import com.hiel.hielside.accountbook.domains.IncomeExpenseType
+import com.hiel.hielside.accountbook.domains.Range
+import com.hiel.hielside.accountbook.domains.toRange
 import com.hiel.hielside.accountbook.jpa.assetcategory.AssetCategoryEntity
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionEntity
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryEntity
@@ -98,7 +100,7 @@ data class GetTransactionDetailResponse(
 
 data class GetAllTransactionResponse(
     val slice: SliceResponseData<GetAllTransactionResponseDetail>,
-    val transactionMonthlyRange: List<OffsetDateTime>,
+    val transactionMonthlyRange: Range<OffsetDateTime>,
 ) {
     data class GetAllTransactionResponseDetail(
         val id: Long,
@@ -137,7 +139,7 @@ data class GetAllTransactionResponse(
                     slice = slice,
                     content = slice.content.map { GetAllTransactionResponseDetail.build(it) },
                 ),
-                transactionMonthlyRange = user.getTransactionMonthlyRange(transactionDatetime).toList(),
+                transactionMonthlyRange = user.getTransactionMonthlyRange(transactionDatetime).toRange(),
             )
         }
     }

@@ -2,10 +2,6 @@ spring:
   config:
     activate:
       on-profile: local
-  datasource:
-    url: jdbc:mysql://localhost:3306
-    username: root
-    password:
   jpa:
     properties:
       hibernate:
@@ -14,13 +10,6 @@ spring:
         use_sql_comments: true
     hibernate:
       ddl-auto: none
-  data:
-    redis:
-      host: localhost
-      port: 6379
-  mail:
-    username: yangjunghooon@gmail.com
-    password:
 logging:
   level:
     org:
@@ -30,15 +19,10 @@ logging:
             bind: trace
 cloud:
   aws:
-    credentials:
-      access-key:
-      secret-key:
     cloudwatch:
       group-name: /aws/ec2/instance/hiel-side-develop/log
       stream-prefix: hiel-side-develop-
     s3:
       bucket: hiel-side-develop
-jwt:
-  secret-key:
 allow-origin-urls: http://localhost:3000
 web-client-url: http://localhost:3000

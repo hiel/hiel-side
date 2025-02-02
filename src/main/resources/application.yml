@@ -1,9 +1,11 @@
 spring:
+  profiles:
+    include: secret
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
   mail:
     host: smtp.gmail.com
     port: 587
-    username: yangjunghooon@gmail.com
-    password:
     properties:
       mail:
         smtp:
@@ -11,8 +13,6 @@ spring:
           timeout: 5000
           starttls:
             enable: true
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
     open-in-view: false
@@ -25,6 +25,10 @@ spring:
           events:
             log:
               LOG_QUERIES_SLOWER_THAN_MS: 200
+  data:
+    redis:
+      host: localhost
+      port: 6379
 logging:
   level:
     root:
@@ -38,34 +42,3 @@ cloud:
       auto: false
     region:
       static: ap-northeast-2
-open-api-url: https://localhost:8080
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: develop
-  datasource:
-    url: jdbc:mysql://localhost:3306
-    username: root
-    password:
-  jpa:
-  data:
-    redis:
-      host: localhost
-      port: 6379
-cloud:
-  aws:
-    credentials:
-      access-key:
-      secret-key:
-    cloudwatch:
-      group-name: /aws/ec2/instance/hiel-side-develop/log
-      stream-prefix: hiel-side-develop-
-    s3:
-      bucket: hiel-side-develop
-jwt:
-  secret-key: 8247be5bd3cd9dd391521cbf3596fa307af51e8b2f158e96e36ec521db62bd23
-allow-origin-urls: http://localhost:3000
-web-client-url: http://localhost:3000

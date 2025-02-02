@@ -1,6 +1,7 @@
 package com.hiel.hielside.accountbook.apis.home
 
 import com.hiel.hielside.accountbook.domains.IncomeExpenseType
+import com.hiel.hielside.accountbook.domains.toRange
 import com.hiel.hielside.accountbook.jpa.assetcategory.AssetCategoryRepository
 import com.hiel.hielside.accountbook.jpa.transaction.TransactionRepository
 import com.hiel.hielside.accountbook.jpa.transactioncategory.TransactionCategoryRepository
@@ -9,8 +10,9 @@ import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
 import com.hiel.hielside.common.utilities.getNowKst
-import org.springframework.stereotype.Service
+import com.hiel.hielside.common.utilities.untilInitializeTime
 import java.time.temporal.ChronoUnit
+import org.springframework.stereotype.Service
 
 @Service
 class AccountBookHomeService(
@@ -24,7 +26,7 @@ class AccountBookHomeService(
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
 
         val range = user.getTransactionMonthlyRange(getNowKst())
-        val daysLeft = getNowKst().until(range.second, ChronoUnit.DAYS) + 1 // 오늘 포함
+        val daysLeft = getNowKst().untilInitializeTime(range.second, ChronoUnit.DAYS) + 1 // 오늘 포함
         val transactions = transactionRepository.findAllByTransactionDatetimeBetweenAndUserAndIsDeleted(
             transactionDatetimeStart = range.first, transactionDatetimeEnd = range.second, user = user, isDeleted = false)
 
@@ -39,7 +41,8 @@ class AccountBookHomeService(
             val budget = if (category.budgetPrice == null) null else (category.budgetPrice!! + totalIncome)
             val balance = if (budget == null) null else (budget - totalExpense)
             val availableExpensePricePerDay = if (balance == null) null else (balance / daysLeft)
-            val planedExpensePerDay = if (budget == null) null else (budget / range.first.until(range.second, ChronoUnit.DAYS))
+            val planedExpensePerDay = if (budget == null) null
+                else (budget / range.first.untilInitializeTime(range.second, ChronoUnit.DAYS))
 
             GetHomeResponse.AssetCategoryDetail(
                 id = category.id,
@@ -73,10 +76,11 @@ class AccountBookHomeService(
             else null
         val totalBalance = if (totalBudget != null) (totalBudget - totalExpense) else null
         val availableExpensePricePerDay = if (totalBalance == null) null else (totalBalance / daysLeft)
-        val planedExpensePerDay = if (totalBudget == null) null else (totalBudget / range.first.until(range.second, ChronoUnit.DAYS))
+        val planedExpensePerDay = if (totalBudget == null) null
+            else (totalBudget / range.first.untilInitializeTime(range.second, ChronoUnit.DAYS))
 
         return GetHomeResponse(
-            budget = totalBudget,
+            transactionMonthlyRange = user.getTransactionMonthlyRange(getNowKst()).toRange(),
             totalExpense = totalExpense,
             balance = totalBalance,
             availableExpensePricePerDay = if (availableExpensePricePerDay != null && availableExpensePricePerDay < 0) 0
