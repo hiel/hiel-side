@@ -10,7 +10,7 @@ import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
 import com.hiel.hielside.common.utilities.getNowKst
-import com.hiel.hielside.common.utilities.untilInitializeTime
+import com.hiel.hielside.common.utilities.untilStartOfTime
 import java.time.temporal.ChronoUnit
 import org.springframework.stereotype.Service
 
@@ -26,47 +26,64 @@ class AccountBookHomeService(
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
 
         val range = user.getTransactionMonthlyRange(getNowKst())
-        val daysLeft = getNowKst().untilInitializeTime(range.second, ChronoUnit.DAYS) + 1 // 오늘 포함
+        val daysLeft = getNowKst().untilStartOfTime(range.second, ChronoUnit.DAYS) + 1 // 오늘 포함
         val transactions = transactionRepository.findAllByTransactionDatetimeBetweenAndUserAndIsDeleted(
             transactionDatetimeStart = range.first, transactionDatetimeEnd = range.second, user = user, isDeleted = false)
 
         val assetCategories = assetCategoryRepository.findAllByUser(user)
-        val assetCategoryDetails = assetCategories.map { category ->
-            val totalIncome = transactions.filter { transaction ->
-                transaction.assetCategory.id == category.id && transaction.incomeExpenseType == IncomeExpenseType.INCOME }
-                .sumOf { it.price }
-            val totalExpense = transactions.filter { transaction ->
-                transaction.assetCategory.id == category.id && transaction.incomeExpenseType == IncomeExpenseType.EXPENSE }
-                .sumOf { it.price }
-            val budget = if (category.budgetPrice == null) null else (category.budgetPrice!! + totalIncome)
-            val balance = if (budget == null) null else (budget - totalExpense)
-            val availableExpensePricePerDay = if (balance == null) null else (balance / daysLeft)
-            val planedExpensePerDay = if (budget == null) null
-                else (budget / range.first.untilInitializeTime(range.second, ChronoUnit.DAYS))
+        val assetCategoryDetails = mutableListOf<GetHomeResponse.AssetCategoryDetail>()
+        run categoryMap@ {
+            assetCategories.forEach { category ->
+                val categoryTransactions = transactions.filter { transaction -> transaction.assetCategory.id == category.id }
+                if (!category.isActive && categoryTransactions.isEmpty()) {
+                    return@categoryMap
+                }
 
-            GetHomeResponse.AssetCategoryDetail(
-                id = category.id,
-                name = category.name,
-                budget = budget,
-                totalExpense = totalExpense,
-                balance = balance,
-                availableExpensePricePerDay = if (availableExpensePricePerDay != null && availableExpensePricePerDay < 0) 0
-                    else availableExpensePricePerDay,
-                isFine = if (planedExpensePerDay == null) null else (planedExpensePerDay <= availableExpensePricePerDay!!),
-            )
+                val totalIncome = categoryTransactions.filter { transaction -> transaction.incomeExpenseType == IncomeExpenseType.INCOME }
+                    .sumOf { it.price }
+                val totalExpense = categoryTransactions.filter { transaction -> transaction.incomeExpenseType == IncomeExpenseType.EXPENSE }
+                    .sumOf { it.price }
+                val budget = if (category.budgetPrice == null) null else (category.budgetPrice!! + totalIncome)
+                val balance = if (budget == null) null else (budget - totalExpense)
+                val availableExpensePricePerDay = if (balance == null) null else (balance / daysLeft)
+                val planedExpensePerDay = if (budget == null) null
+                    else (budget / range.first.untilStartOfTime(range.second, ChronoUnit.DAYS))
+
+                assetCategoryDetails.add(
+                    GetHomeResponse.AssetCategoryDetail(
+                        id = category.id,
+                        name = category.name,
+                        budget = budget,
+                        totalExpense = totalExpense,
+                        balance = balance,
+                        availableExpensePricePerDay = if (availableExpensePricePerDay != null && availableExpensePricePerDay < 0) 0
+                            else availableExpensePricePerDay,
+                        isFine = if (planedExpensePerDay == null) null else (planedExpensePerDay <= availableExpensePricePerDay!!),
+                    )
+                )
+            }
         }
 
         val transactionCategories = transactionCategoryRepository.findAllByUser(user)
-        val transactionCategoryDetails = transactionCategories.map { category ->
-            val totalExpense = transactions.filter { transaction ->
-                transaction.transactionCategory.id == category.id && transaction.incomeExpenseType == IncomeExpenseType.EXPENSE }
-                .sumOf { it.price }
+        val transactionCategoryDetails = mutableListOf<GetHomeResponse.TransactionCategoryDetail>()
+        run categoryMap@ {
+            transactionCategories.forEach { category ->
+                val categoryTransactions = transactions.filter { transaction -> transaction.assetCategory.id == category.id }
+                if (!category.isActive && categoryTransactions.isEmpty()) {
+                    return@categoryMap
+                }
 
-            GetHomeResponse.TransactionCategoryDetail(
-                id = category.id,
-                name = category.name,
-                totalExpense = totalExpense,
-            )
+                val totalExpense = categoryTransactions.filter { transaction -> transaction.incomeExpenseType == IncomeExpenseType.EXPENSE }
+                    .sumOf { it.price }
+
+                transactionCategoryDetails.add(
+                    GetHomeResponse.TransactionCategoryDetail(
+                        id = category.id,
+                        name = category.name,
+                        totalExpense = totalExpense,
+                    )
+                )
+            }
         }
 
         val totalIncome = transactions.filter { it.incomeExpenseType == IncomeExpenseType.INCOME }.sumOf { it.price }
@@ -77,7 +94,7 @@ class AccountBookHomeService(
         val totalBalance = if (totalBudget != null) (totalBudget - totalExpense) else null
         val availableExpensePricePerDay = if (totalBalance == null) null else (totalBalance / daysLeft)
         val planedExpensePerDay = if (totalBudget == null) null
-            else (totalBudget / range.first.untilInitializeTime(range.second, ChronoUnit.DAYS))
+            else (totalBudget / range.first.untilStartOfTime(range.second, ChronoUnit.DAYS))
 
         return GetHomeResponse(
             transactionMonthlyRange = user.getTransactionMonthlyRange(getNowKst()).toRange(),

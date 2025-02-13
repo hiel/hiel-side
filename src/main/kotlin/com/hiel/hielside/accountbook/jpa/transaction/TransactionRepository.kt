@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.springframework.data.jpa.repository.JpaRepository
 import java.time.OffsetDateTime
+import java.util.Date
 
 interface TransactionRepository : JpaRepository<TransactionEntity, Long> {
     fun findFirstByIdAndUser(id: Long, user: AccountBookUserEntity): TransactionEntity?

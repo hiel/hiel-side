@@ -9,6 +9,7 @@ import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
 import com.hiel.hielside.common.utilities.pageOf
+import com.hiel.hielside.common.utilities.toDate
 import io.lettuce.core.BitFieldArgs.Offset
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
