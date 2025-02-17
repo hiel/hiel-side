@@ -14,7 +14,9 @@ class AccountBookHomeController(
     private val accountBookHomeService: AccountBookHomeService,
 ) {
     @GetMapping("/home")
-    fun getHome(@AuthenticationPrincipal userDetails: UserDetailsImpl): ApiResponse<GetHomeResponse> {
+    fun getHome(
+        @AuthenticationPrincipal userDetails: UserDetailsImpl,
+    ): ApiResponse<GetHomeResponse> {
         return ApiResponseFactory.success(accountBookHomeService.getHome(userDetails.id))
     }
 }

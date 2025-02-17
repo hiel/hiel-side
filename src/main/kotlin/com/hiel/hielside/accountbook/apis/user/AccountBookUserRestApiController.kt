@@ -35,12 +35,17 @@ class AccountBookUserRestApiController(
         @RequestBody request: UpdateTransactionStartDayRequest,
     ): ApiResponse<UpdateTransactionStartDayResponse> {
         request.validate()
-        return ApiResponseFactory.success(UpdateTransactionStartDayResponse(
-            userService.updateTransactionStartDay(startDay = request.transactionStartDay, userId = userDetails.id)))
+        return ApiResponseFactory.success(
+            UpdateTransactionStartDayResponse(
+                userService.updateTransactionStartDay(startDay = request.transactionStartDay, userId = userDetails.id),
+            ),
+        )
     }
 
     @GetMapping
-    fun getUser(@AuthenticationPrincipal userDetails: UserDetailsImpl): ApiResponse<GetUserResponse> {
+    fun getUser(
+        @AuthenticationPrincipal userDetails: UserDetailsImpl,
+    ): ApiResponse<GetUserResponse> {
         return ApiResponseFactory.success(userService.getUser(userId = userDetails.id))
     }
 }

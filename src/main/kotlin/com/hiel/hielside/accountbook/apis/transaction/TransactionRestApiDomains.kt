@@ -132,7 +132,9 @@ data class GetAllTransactionResponse(
 
     companion object {
         fun build(
-            slice: Slice<TransactionEntity>, user: AccountBookUserEntity, transactionDatetime: OffsetDateTime,
+            slice: Slice<TransactionEntity>,
+            user: AccountBookUserEntity,
+            transactionDatetime: OffsetDateTime,
         ): GetAllTransactionResponse {
             return GetAllTransactionResponse(
                 slice = SliceResponseData.build(
@@ -144,4 +146,3 @@ data class GetAllTransactionResponse(
         }
     }
 }
-

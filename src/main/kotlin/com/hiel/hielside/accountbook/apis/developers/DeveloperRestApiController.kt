@@ -50,7 +50,7 @@ class DeveloperRestApiController(
                     userStatus = UserStatus.AVAILABLE,
                     transactionStartDay = (FIRST_DAY_OF_MONTH..LAST_DAY_OF_MONTH).random(),
                 )
-            }
+            },
         )
 
         val assetCategoryEntities = assetCategoryRepository.saveAll(
@@ -60,7 +60,7 @@ class DeveloperRestApiController(
                     budgetPrice = listOf(((0..10000000).random()).truncate(3).toLong(), null).random(),
                     user = userEntities.first(),
                 )
-            }
+            },
         )
 
         val transactionCategoryEntities = transactionCategoryRepository.saveAll(
@@ -69,7 +69,7 @@ class DeveloperRestApiController(
                     name = it,
                     user = userEntities.first(),
                 )
-            }
+            },
         )
 
         (1..transactionCount).forEach { _ ->
@@ -90,7 +90,7 @@ class DeveloperRestApiController(
                     assetCategory = assetCategoryEntities.random(),
                     transactionCategory = transactionCategoryEntities.random(),
                     transactionDatetime = datetime,
-                )
+                ),
             )
         }
     }

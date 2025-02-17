@@ -33,7 +33,8 @@ class TransactionCategoryService(
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         val transactionCategory = transactionCategoryRepository.findFirstByIdAndUserAndIsActive(
-            id = transactionCategoryId, user = user, isActive = true)
+            id = transactionCategoryId, user = user, isActive = true,
+        )
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
         transactionCategory.name = name
     }

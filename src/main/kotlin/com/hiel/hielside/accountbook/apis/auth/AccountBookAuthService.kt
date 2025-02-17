@@ -1,7 +1,5 @@
 package com.hiel.hielside.accountbook.apis.auth
 
-import com.hiel.hielside.common.utilities.mail.MailUtility
-import org.springframework.beans.factory.annotation.Value
 import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.domains.ResultCode
@@ -19,6 +17,8 @@ import com.hiel.hielside.common.redis.signuptoken.SignupTokenRedisRepository
 import com.hiel.hielside.common.utilities.JwtTokenUtility
 import com.hiel.hielside.common.utilities.getRandomString
 import com.hiel.hielside.common.utilities.mail.MailTemplate
+import com.hiel.hielside.common.utilities.mail.MailUtility
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -67,10 +67,12 @@ class AccountBookAuthService(
         val signupTokenRedis = signupTokenRedisRepository.save(SignupTokenRedisEntity.build(user))
         mailUtility.sendMail(
             to = email,
-            template = MailTemplate.SignupCertificate(MailTemplate.SignupCertificate.Params(
-                webClientUrl = "${webClientUrl}/accountbook",
-                token = signupTokenRedis.signupToken,
-            )),
+            template = MailTemplate.SignupCertificate(
+                MailTemplate.SignupCertificate.Params(
+                    webClientUrl = "$webClientUrl/accountbook",
+                    token = signupTokenRedis.signupToken,
+                ),
+            ),
         )
     }
 
@@ -133,10 +135,12 @@ class AccountBookAuthService(
         resetPasswordTokenRedisRepository.save(ResetPasswordTokenRedisEntity(userId = user.id, resetPasswordToken = resetPasswordToken))
         mailUtility.sendMail(
             to = email,
-            template = MailTemplate.PasswordReset(MailTemplate.PasswordReset.Params(
-                webClientUrl = webClientUrl,
-                token = resetPasswordToken,
-            ))
+            template = MailTemplate.PasswordReset(
+                MailTemplate.PasswordReset.Params(
+                    webClientUrl = webClientUrl,
+                    token = resetPasswordToken,
+                ),
+            ),
         )
     }
 

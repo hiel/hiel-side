@@ -13,7 +13,7 @@ data class UpdateAssetCategoryRequest(
 )
 
 data class GetAllAssetCategoryResponse(
-    val list: List<GetAllAssetCategoryDetail>
+    val list: List<GetAllAssetCategoryDetail>,
 ) {
     data class GetAllAssetCategoryDetail(
         val id: Long,

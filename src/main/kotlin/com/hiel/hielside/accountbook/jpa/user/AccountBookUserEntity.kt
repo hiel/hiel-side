@@ -8,9 +8,8 @@ import com.hiel.hielside.common.jpa.BaseEntity
 import com.hiel.hielside.common.utilities.FIRST_DAY_OF_MONTH
 import com.hiel.hielside.common.utilities.LAST_DAY_OF_MONTH
 import com.hiel.hielside.common.utilities.convertEndOfTime
-import com.hiel.hielside.common.utilities.getLastDayOfMonth
 import com.hiel.hielside.common.utilities.convertStartOfTime
-import com.hiel.hielside.common.utilities.convertToLastDayOfMonth
+import com.hiel.hielside.common.utilities.getLastDayOfMonth
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -97,10 +96,11 @@ class AccountBookUserEntity(
         return (
             start.withDayOfMonth(if (start.getLastDayOfMonth() <= transactionStartDay) start.getLastDayOfMonth() else transactionStartDay)
                 .convertStartOfTime()
-        to
-            end.withDayOfMonth(
-                (if (end.getLastDayOfMonth() <= transactionStartDay) end.getLastDayOfMonth() else transactionStartDay)).minusDays(1)
-                .convertEndOfTime()
+                to
+                end.withDayOfMonth(
+                    (if (end.getLastDayOfMonth() <= transactionStartDay) end.getLastDayOfMonth() else transactionStartDay),
+                ).minusDays(1)
+                    .convertEndOfTime()
         )
     }
 

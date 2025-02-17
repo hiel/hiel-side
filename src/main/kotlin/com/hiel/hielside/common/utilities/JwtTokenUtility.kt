@@ -1,12 +1,12 @@
 package com.hiel.hielside.common.utilities
 
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.auth.AuthToken
 import com.hiel.hielside.common.domains.auth.TokenType
 import com.hiel.hielside.common.domains.auth.UserDetailsImpl
 import com.hiel.hielside.common.domains.user.UserType
 import com.hiel.hielside.common.exceptions.ServiceException
-import com.hiel.hielside.accountbook.jpa.user.AccountBookUserEntity
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException

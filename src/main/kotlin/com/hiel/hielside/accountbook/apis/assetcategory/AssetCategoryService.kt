@@ -2,10 +2,10 @@ package com.hiel.hielside.accountbook.apis.assetcategory
 
 import com.hiel.hielside.accountbook.jpa.assetcategory.AssetCategoryEntity
 import com.hiel.hielside.accountbook.jpa.assetcategory.AssetCategoryRepository
+import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
-import com.hiel.hielside.accountbook.jpa.user.AccountBookUserRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
@@ -34,7 +34,8 @@ class AssetCategoryService(
         val user = userRepository.findFirstByIdAndUserStatus(id = userId, userStatus = UserStatus.AVAILABLE)
             ?: throw ServiceException(ResultCode.Auth.NOT_EXIST_USER)
         val assetCategory = assetCategoryRepository.findFirstByIdAndUserAndIsActive(
-            id = assetCategoryId, user = user, isActive = true)
+            id = assetCategoryId, user = user, isActive = true,
+        )
             ?: throw ServiceException(ResultCode.Common.NOT_EXIST_RESOURCE)
         assetCategory.name = name
         assetCategory.budgetPrice = budgetPrice

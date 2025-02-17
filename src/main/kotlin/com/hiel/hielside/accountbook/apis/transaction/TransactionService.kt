@@ -9,13 +9,10 @@ import com.hiel.hielside.common.domains.ResultCode
 import com.hiel.hielside.common.domains.user.UserStatus
 import com.hiel.hielside.common.exceptions.ServiceException
 import com.hiel.hielside.common.utilities.pageOf
-import com.hiel.hielside.common.utilities.toDate
-import io.lettuce.core.BitFieldArgs.Offset
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
-import java.util.Date
 
 @Service
 class TransactionService(
@@ -38,7 +35,7 @@ class TransactionService(
                 user = user,
                 assetCategory = assetCategory,
                 transactionCategory = transactionCategory,
-            )
+            ),
         )
     }
 

@@ -21,7 +21,7 @@ import io.mockk.spyk
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-class AccountBookHomeServiceTest : FunSpec ({
+class AccountBookHomeServiceTest : FunSpec({
     val userRepository = mockk<AccountBookUserRepository>()
     val assetCategoryRepository = mockk<AssetCategoryRepository>()
     val transactionCategoryRepository = mockk<TransactionCategoryRepository>()
@@ -31,22 +31,24 @@ class AccountBookHomeServiceTest : FunSpec ({
         userRepository,
         assetCategoryRepository,
         transactionCategoryRepository,
-        transactionRepository
+        transactionRepository,
     )
 
     context("getHome") {
         test("getHome") {
             mockkStatic("com.hiel.hielside.common.utilities.DateTimeUtilityKt")
 
-            val user = spyk(AccountBookUserEntity(
-                id = 1,
-                email = "TEST@TEST.com",
-                encryptPassword = "TEST_ENCRYPT_PASSWORD",
-                name = "TEST_NAME",
-                userType = UserType.entries.random(),
-                userStatus = UserStatus.entries.random(),
-                transactionStartDay = 1,
-            ))
+            val user = spyk(
+                AccountBookUserEntity(
+                    id = 1,
+                    email = "TEST@TEST.com",
+                    encryptPassword = "TEST_ENCRYPT_PASSWORD",
+                    name = "TEST_NAME",
+                    userType = UserType.entries.random(),
+                    userStatus = UserStatus.entries.random(),
+                    transactionStartDay = 1,
+                ),
+            )
             val assetCategories = listOf(
                 AssetCategoryEntity(id = 1, name = "TEST_ASSET_CATEGORY-1", budgetPrice = 100000, user = user),
                 AssetCategoryEntity(id = 2, name = "TEST_ASSET_CATEGORY-2", budgetPrice = 10000, user = user),
@@ -98,7 +100,8 @@ class AccountBookHomeServiceTest : FunSpec ({
 
             every { user.getTransactionMonthlyRange(any()) } returns (
                 OffsetDateTime.of(2025, 2, 1, 0, 0, 0, 0, ZoneOffset.UTC)
-                    to OffsetDateTime.of(2025, 2, 28, 0, 0, 0, 0, ZoneOffset.UTC))
+                    to OffsetDateTime.of(2025, 2, 28, 0, 0, 0, 0, ZoneOffset.UTC)
+            )
 
             every { userRepository.findFirstByIdAndUserStatus(any(), any()) } returns user
             every { transactionRepository.findAllByTransactionDatetimeBetweenAndUserAndIsDeleted(any(), any(), any(), any()) } returns

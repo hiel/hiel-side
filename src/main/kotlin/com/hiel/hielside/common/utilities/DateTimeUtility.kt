@@ -60,5 +60,7 @@ fun getNowKst(): OffsetDateTime = ZonedDateTime.now(ZONE_ID).toOffsetDateTime()
 
 fun OffsetDateTime.getLastDayOfMonth() = this.with(TemporalAdjusters.lastDayOfMonth()).dayOfMonth
 
-fun OffsetDateTime.untilStartOfTime(endExclusive: OffsetDateTime, unit: TemporalUnit)
-    = this.convertStartOfTime().until(endExclusive.convertStartOfTime(), unit)
+fun OffsetDateTime.untilStartOfTime(endExclusive: OffsetDateTime, unit: TemporalUnit) = this.convertStartOfTime().until(
+    endExclusive.convertStartOfTime(),
+    unit,
+)

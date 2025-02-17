@@ -16,18 +16,18 @@ class AccountBookUserEntityTest : FunSpec({
                 name = "TEST_USER_NAME",
                 userType = UserType.USER,
                 userStatus = UserStatus.AVAILABLE,
-                transactionStartDay = 15
+                transactionStartDay = 15,
             )
 
             user.getTransactionMonthlyRange(
-                OffsetDateTime.of(2024, 2, 20, 0, 0, 0, 0, ZoneOffset.UTC)
+                OffsetDateTime.of(2024, 2, 20, 0, 0, 0, 0, ZoneOffset.UTC),
             ).let {
                 it.first.month.value shouldBe 2
                 it.second.month.value shouldBe 3
             }
 
             user.getTransactionMonthlyRange(
-                OffsetDateTime.of(2024, 2, 15, 0, 0, 0, 0, ZoneOffset.UTC)
+                OffsetDateTime.of(2024, 2, 15, 0, 0, 0, 0, ZoneOffset.UTC),
             ).let {
                 it.first.month.value shouldBe 2
                 it.second.month.value shouldBe 3
@@ -41,11 +41,11 @@ class AccountBookUserEntityTest : FunSpec({
                 name = "TEST_USER_NAME",
                 userType = UserType.USER,
                 userStatus = UserStatus.AVAILABLE,
-                transactionStartDay = 31
+                transactionStartDay = 31,
             )
 
             user.getTransactionMonthlyRange(
-                OffsetDateTime.of(2025, 2, 28, 0, 0, 0, 0, ZoneOffset.UTC)
+                OffsetDateTime.of(2025, 2, 28, 0, 0, 0, 0, ZoneOffset.UTC),
             ).let {
                 it.first.monthValue shouldBe 2
                 it.second.monthValue shouldBe 3
@@ -59,11 +59,11 @@ class AccountBookUserEntityTest : FunSpec({
                 name = "TEST_USER_NAME",
                 userType = UserType.USER,
                 userStatus = UserStatus.AVAILABLE,
-                transactionStartDay = 15
+                transactionStartDay = 15,
             )
 
             user.getTransactionMonthlyRange(
-                OffsetDateTime.of(2024, 2, 20, 0, 0, 0, 0, ZoneOffset.UTC)
+                OffsetDateTime.of(2024, 2, 20, 0, 0, 0, 0, ZoneOffset.UTC),
             ).let {
                 it.first.dayOfMonth shouldBe 15
                 it.second.dayOfMonth shouldBe 14
@@ -77,11 +77,11 @@ class AccountBookUserEntityTest : FunSpec({
                 name = "TEST_USER_NAME",
                 userType = UserType.USER,
                 userStatus = UserStatus.AVAILABLE,
-                transactionStartDay = 30
+                transactionStartDay = 30,
             )
 
             user.getTransactionMonthlyRange(
-                OffsetDateTime.of(2024, 3, 20, 0, 0, 0, 0, ZoneOffset.UTC)
+                OffsetDateTime.of(2024, 3, 20, 0, 0, 0, 0, ZoneOffset.UTC),
             ).let {
                 it.first.dayOfMonth shouldBe 29
                 it.second.dayOfMonth shouldBe 29

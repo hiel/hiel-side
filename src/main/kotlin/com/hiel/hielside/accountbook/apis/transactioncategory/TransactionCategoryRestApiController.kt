@@ -33,7 +33,10 @@ class TransactionCategoryRestApiController(
         @RequestBody request: UpdateTransactionCategoryRequest,
     ): ApiResponse<Unit> {
         transactionCategoryService.update(
-            transactionCategoryId = id, name = request.name, userId = userDetails.id)
+            transactionCategoryId = id,
+            name = request.name,
+            userId = userDetails.id,
+        )
         return ApiResponseFactory.success()
     }
 
@@ -51,7 +54,7 @@ class TransactionCategoryRestApiController(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
     ): ApiResponse<GetAllTransactionCategoryResponse> {
         return ApiResponseFactory.success(
-            GetAllTransactionCategoryResponse.build(transactionCategoryService.getAll(userId = userDetails.id))
+            GetAllTransactionCategoryResponse.build(transactionCategoryService.getAll(userId = userDetails.id)),
         )
     }
 }

@@ -11,7 +11,7 @@ data class UpdateTransactionCategoryRequest(
 )
 
 data class GetAllTransactionCategoryResponse(
-    val list: List<GetAllTransactionCategoryDetail>
+    val list: List<GetAllTransactionCategoryDetail>,
 ) {
     data class GetAllTransactionCategoryDetail(
         val id: Long,

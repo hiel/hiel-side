@@ -58,7 +58,8 @@ class TransactionRestApiController(
         @PathVariable id: Long,
     ): ApiResponse<GetTransactionDetailResponse> {
         return ApiResponseFactory.success(
-            GetTransactionDetailResponse.build(transactionService.getDetail(transactionId = id, userId = userDetails.id)))
+            GetTransactionDetailResponse.build(transactionService.getDetail(transactionId = id, userId = userDetails.id)),
+        )
     }
 
     @GetMapping

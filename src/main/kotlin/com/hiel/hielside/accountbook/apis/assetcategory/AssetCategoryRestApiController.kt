@@ -50,7 +50,7 @@ class AssetCategoryRestApiController(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
     ): ApiResponse<GetAllAssetCategoryResponse> {
         return ApiResponseFactory.success(
-            GetAllAssetCategoryResponse.build(assetCategoryService.getAll(userId = userDetails.id))
+            GetAllAssetCategoryResponse.build(assetCategoryService.getAll(userId = userDetails.id)),
         )
     }
 }

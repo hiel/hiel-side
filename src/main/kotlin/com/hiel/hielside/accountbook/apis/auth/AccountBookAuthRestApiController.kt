@@ -21,8 +21,12 @@ class AccountBookAuthRestApiController(
         @RequestBody request: AccountBookSignupRequest,
     ): ApiResponse<Unit> {
         request.validate()
-        authService.signup(email = request.email, password = passwordEncoder.encode(request.password), name = request.name
-            , userType = UserType.USER)
+        authService.signup(
+            email = request.email,
+            password = passwordEncoder.encode(request.password),
+            name = request.name,
+            userType = UserType.USER,
+        )
         return ApiResponseFactory.success()
     }
 
