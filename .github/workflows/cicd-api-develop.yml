@@ -39,5 +39,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY_DEVELOP }}
           port: 22
           script: |
-            pm2 kill
-            pm2 start "java -jar -Dspring.profiles.active=develop ~/app/hiel-side/hiel-side-0.0.1-SNAPSHOT.jar"
+            pm2 stop hiel-side
+            pm2 start "java -jar -Dspring.profiles.active=develop ~/app/hiel-side/hiel-side-0.0.1-SNAPSHOT.jar" --name hiel-side
