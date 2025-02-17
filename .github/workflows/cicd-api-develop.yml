@@ -19,9 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.7
-
       - run: echo "${{ secrets.APPLICATION_SECRET_YML_DEVELOP }}" > src/main/resources/application-secret.yml
-
       - uses: actions/setup-java@v4.2.2
         with:
           distribution: corretto
