@@ -78,7 +78,7 @@ class AccountBookHomeService(
         val transactionCategoryDetails = mutableListOf<GetHomeResponse.TransactionCategoryDetail>()
         run categoryMap@{
             transactionCategories.forEach { category ->
-                val categoryTransactions = transactions.filter { transaction -> transaction.assetCategory.id == category.id }
+                val categoryTransactions = transactions.filter { transaction -> transaction.transactionCategory.id == category.id }
                 if (!category.isActive && categoryTransactions.isEmpty()) {
                     return@categoryMap
                 }

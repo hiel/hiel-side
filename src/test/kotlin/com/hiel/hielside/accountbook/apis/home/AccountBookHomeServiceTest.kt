@@ -72,7 +72,7 @@ class AccountBookHomeServiceTest : FunSpec({
                     transactionDatetime = OffsetDateTime.of(2025, 2, 8, 0, 0, 0, 0, ZoneOffset.UTC),
                 ),
                 TransactionEntity(
-                    id = 1,
+                    id = 2,
                     incomeExpenseType = IncomeExpenseType.EXPENSE,
                     title = "TEST_TITLE",
                     price = 1000,
@@ -83,7 +83,7 @@ class AccountBookHomeServiceTest : FunSpec({
                     transactionDatetime = OffsetDateTime.of(2025, 2, 8, 0, 0, 0, 0, ZoneOffset.UTC),
                 ),
                 TransactionEntity(
-                    id = 1,
+                    id = 3,
                     incomeExpenseType = IncomeExpenseType.INCOME,
                     title = "TEST_TITLE",
                     price = 1000,
