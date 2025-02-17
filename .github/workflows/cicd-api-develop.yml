@@ -25,7 +25,7 @@ jobs:
           java-version: 21
           architecture: x64
       - uses: gradle/actions/setup-gradle@v4.0.0
-      - run: ./gradlew clean build -x test
+      - run: ./gradlew clean build
       - uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_DEVELOP }}
