@@ -30,6 +30,7 @@ dependencies {
     // spring
     implementation("org.springframework.boot:spring-boot-starter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     // test
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
