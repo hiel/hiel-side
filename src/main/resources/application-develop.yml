@@ -9,5 +9,5 @@ cloud:
       stream-prefix: hiel-side-develop-
     s3:
       bucket: hiel-side-develop
-allow-origin-urls: http://localhost:3000
-web-client-url: http://localhost:3000
+allow-origin-urls: https://hiel-side-client-web-git-develop-hiel1s-projects.vercel.app
+web-client-url: https://hiel-side-client-web-git-develop-hiel1s-projects.vercel.app
